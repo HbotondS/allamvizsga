@@ -17,6 +17,7 @@ function setup() {
     createCanvas(myWindowWidth, myWindowHeight, WEBGL);
 
     let canvasSize = Math.round(Math.sqrt(1000)) * 50;
+    zoom = canvasSize;
     extraCanvas = createGraphics(canvasSize, canvasSize, WEBGL);
     extraCanvas.background(255, 0, 0);
     extraCanvas.translate(-canvasSize / 2, -canvasSize / 2);
@@ -73,6 +74,8 @@ function mouseWheel(event) {
     if (event.delta > 0) {
         zoom += zoomSpeed;
     }
+
+    print(zoom);
 }
 
 function keyDown() {
@@ -97,7 +100,7 @@ function draw() {
     background(0);
     keyDown();
     camera(0, 0, zoom, 0, 0, 0, 0, 1, 0);
-    translate(-myWindowWidth / 2, -myWindowHeight / 2);
+    imageMode(CENTER);
     let x = -windowWidth / 2;
     let y = -windowHeight / 2;
     image(extraCanvas, posX, posY);
