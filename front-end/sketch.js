@@ -16,9 +16,10 @@ function setup() {
     myWindowHeight = windowHeight - 10;
     createCanvas(myWindowWidth, myWindowHeight, WEBGL);
 
-    extraCanvas = createGraphics(myWindowWidth, myWindowHeight, WEBGL);
+    let canvasSize = Math.round(Math.sqrt(1000)) * 50;
+    extraCanvas = createGraphics(canvasSize, canvasSize, WEBGL);
     extraCanvas.background(255, 0, 0);
-    extraCanvas.translate(-myWindowWidth / 2, -myWindowHeight / 2);
+    extraCanvas.translate(-canvasSize / 2, -canvasSize / 2);
 
     document.getElementById('loadBtn').onclick = () => {
         document.getElementById('loading').style.visibility = 'visible';
@@ -33,15 +34,17 @@ function setup() {
             console.log(`start cutting, images: ${images.length}`);
             let x = 0, y = 0;
             for (let i = 0; i < images.length; i++) {
-                for (let j = 0; j < 50; j++) {
+                for (let j = 0, k = 0; j < 50; j++, k++) {
                     let img = images[i].get(50 * j, 0, 50, 50);
                     images2.push(img);
 
                     extraCanvas.image(img, x, y);
                     x += 50;
+                    if (k === canvasSize / 50 - 1) {
+                        y += 50;
+                        x = 0;
+                    }
                 }
-                x = 0;
-                y += 50;
             }
 
             console.log(`cutting done, images2: ${images2.length}`);
