@@ -7,6 +7,10 @@ let extraCanvas;
 let myWindowWidth;
 let myWindowHeight;
 
+let zoom = 1000;
+let posX = 0;
+let posY = 0;
+
 function setup() {
     myWindowWidth = windowWidth * 89 / 100;
     myWindowHeight = windowHeight - 10;
@@ -17,11 +21,11 @@ function setup() {
     extraCanvas.translate(-myWindowWidth / 2, -myWindowHeight / 2);
 
     document.getElementById('loadBtn').onclick = () => {
-        document.getElementById('loading').style.visibility='visible';
+        document.getElementById('loading').style.visibility = 'visible';
 
 
-        for (let i = 1; i <= 200; i++) {
-            let img = loadImage('images/row-images/10k/' + i + '.jpg');
+        for (let i = 1; i <= 20; i++) {
+            let img = loadImage('images/row-images/1k/' + i + '.jpg');
             images.push(img);
         }
 
@@ -42,11 +46,11 @@ function setup() {
 
             console.log(`cutting done, images2: ${images2.length}`);
             canDraw = true;
+
+            document.getElementById('loading').style.visibility = 'hidden';
         }, 1000);
 
         console.log(`load done, images: ${images.length}`);
-
-        document.getElementById('loading').style.visibility='hidden';
     };
 
     document.getElementById('rndBtn').onclick = () => {
@@ -58,11 +62,40 @@ function setup() {
     };
 }
 
+function mouseWheel(event) {
+    const zoomSpeed = 20;
+    if (event.delta < 0) {
+        zoom -= zoomSpeed;
+    }
+    if (event.delta > 0) {
+        zoom += zoomSpeed;
+    }
+}
+
+function keyDown() {
+    if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) {
+        posX -= 5;
+    }
+
+    if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) {
+        posX += 5;
+    }
+
+    if (keyIsDown(UP_ARROW) || keyIsDown(87)) {
+        posY -= 5;
+    }
+
+    if (keyIsDown(DOWN_ARROW) || keyIsDown(83)) {
+        posY += 5;
+    }
+}
+
 function draw() {
     background(0);
-    orbitControl();
+    keyDown();
+    camera(0, 0, zoom, 0, 0, 0, 0, 1, 0);
     translate(-myWindowWidth / 2, -myWindowHeight / 2);
     let x = -windowWidth / 2;
     let y = -windowHeight / 2;
-    image(extraCanvas, 0, 0);
+    image(extraCanvas, posX, posY);
 }
