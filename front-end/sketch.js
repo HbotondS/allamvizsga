@@ -76,13 +76,19 @@ function setup() {
     };
 
     document.getElementById('rndBtn').onclick = () => {
+        const t0 = performance.now();
         shuffle(images2, true);
         reRenderBuffer();
+        const t1 = performance.now();
+        console.log("Random order images took: " + (t1 - t0) + " milliseconds.");
     };
 
     document.getElementById('revBtn').onclick = () => {
+        const t0 = performance.now();
         images2.reverse();
         reRenderBuffer();
+        const t1 = performance.now();
+        console.log("Reverse order images took: " + (t1 - t0) + " milliseconds.");
     };
 }
 
