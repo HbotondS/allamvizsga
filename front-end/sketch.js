@@ -3,6 +3,7 @@ let images2 = [];
 let canDraw = false;
 
 let extraCanvas;
+let canvasSize = Math.round(Math.sqrt(1000)) * 50;
 
 let myWindowWidth;
 let myWindowHeight;
@@ -11,12 +12,26 @@ let zoom = 1000;
 let posX = 0;
 let posY = 0;
 
+function reRenderBuffer() {
+    extraCanvas.clear();
+    let x = 0, y = 0, k = 0;
+    for (let j = 0; j < images2.length; j++) {
+        extraCanvas.image(images2[j], x, y);
+        x += 50;
+        k++;
+        if (k === canvasSize / 50) {
+            y += 50;
+            x = 0;
+            k = 0;
+        }
+    }
+}
+
 function setup() {
     myWindowWidth = windowWidth * 89 / 100;
     myWindowHeight = windowHeight - 10;
     createCanvas(myWindowWidth, myWindowHeight, WEBGL);
 
-    let canvasSize = Math.round(Math.sqrt(1000)) * 50;
     zoom = canvasSize;
     extraCanvas = createGraphics(canvasSize, canvasSize, WEBGL);
     extraCanvas.background(255, 0, 0);
@@ -33,17 +48,20 @@ function setup() {
 
         setTimeout(() => {
             console.log(`start cutting, images: ${images.length}`);
-            let x = 0, y = 0;
+            let x = 0, y = 0, k = 0;
+            extraCanvas.clear();
             for (let i = 0; i < images.length; i++) {
-                for (let j = 0, k = 0; j < 50; j++, k++) {
+                for (let j = 0; j < 50; j++) {
                     let img = images[i].get(50 * j, 0, 50, 50);
                     images2.push(img);
 
                     extraCanvas.image(img, x, y);
                     x += 50;
-                    if (k === canvasSize / 50 - 1) {
+                    k++;
+                    if (k === canvasSize / 50) {
                         y += 50;
                         x = 0;
+                        k = 0;
                     }
                 }
             }
@@ -59,10 +77,12 @@ function setup() {
 
     document.getElementById('rndBtn').onclick = () => {
         shuffle(images2, true);
+        reRenderBuffer();
     };
 
     document.getElementById('revBtn').onclick = () => {
         images2.reverse();
+        reRenderBuffer();
     };
 }
 
@@ -75,7 +95,7 @@ function mouseWheel(event) {
         zoom += zoomSpeed;
     }
 
-    print(zoom);
+    // print(zoom);
 }
 
 function keyDown() {
