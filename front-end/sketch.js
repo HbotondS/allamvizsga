@@ -106,28 +106,28 @@ function mouseWheel(event) {
 
 function keyDown() {
     if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) {
-        posX -= 5;
-    }
-
-    if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) {
         posX += 5;
     }
 
+    if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) {
+        posX -= 5;
+    }
+
     if (keyIsDown(UP_ARROW) || keyIsDown(87)) {
-        posY -= 5;
+        posY += 5;
     }
 
     if (keyIsDown(DOWN_ARROW) || keyIsDown(83)) {
-        posY += 5;
+        posY -= 5;
     }
 }
 
 function draw() {
     background(0);
     keyDown();
-    camera(0, 0, zoom, 0, 0, 0, 0, 1, 0);
+    camera(posX, posY, zoom, posX, posY, 0, 0, 1, 0);
     imageMode(CENTER);
     let x = -windowWidth / 2;
     let y = -windowHeight / 2;
-    image(extraCanvas, posX, posY);
+    image(extraCanvas, 0, 0);
 }
