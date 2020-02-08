@@ -1,6 +1,7 @@
 import json
 import os
 from http.server import BaseHTTPRequestHandler, HTTPServer
+import re
 
 
 def getImages():
@@ -41,6 +42,9 @@ def readJson():
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
+        regex = r"\/image\/.+\b"
+        print(self.path)
+        print(re.match(regex, self.path, re.MULTILINE))
         if self.path == '/images':
             self.send_response(200)
             self.send_header('Content-type', 'application/json')
@@ -48,7 +52,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()
             self.wfile.write(bytes(getImages(), 'utf-8'))
-        elif self.path == '/image':
+        elif re.match(regex, self.path, re.MULTILINE):
             self.send_response(200)
             self.send_header('Content-type', 'image/jpeg')
             self.send_header('Origin', 'localhost')
