@@ -50,14 +50,15 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             self.wfile.write(bytes(getImages(), 'utf-8'))
         elif self.path == '/image':
             self.send_response(200)
-            self.send_header('Content-type', 'application/json')
+            self.send_header('Content-type', 'image/jpeg')
             self.send_header('Origin', 'localhost')
             self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()
             file = 'C:/Users/Boti/Desktop/allamvizsga/server/test-directory/1.jpg'
             f = open(file, 'rb')
-            fr = f.read()
-            self.wfile.write(f)
+            fr = f.read(1024)
+            self.wfile.write(fr)
+
 
 print("server started...")
 httpd = HTTPServer(('localhost', 8000), SimpleHTTPRequestHandler)
