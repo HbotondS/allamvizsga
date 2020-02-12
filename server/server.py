@@ -4,7 +4,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 
 
 def getImages():
-    rootdir = 'C:/Users/Boti/Desktop/python server testing/server/test-directory'
+    rootdir = 'C:/Users/Boti/Desktop/allamvizsga/server/test-directory'
 
     myjson = {
         'size': 0,
@@ -27,7 +27,7 @@ def getImages():
 
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
-    def do_POST(self):
+    def do_GET(self):
         if self.path == '/images':
             self.send_response(200)
             self.end_headers()
