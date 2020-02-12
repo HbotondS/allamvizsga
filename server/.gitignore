@@ -1,7 +1,9 @@
 .idea
 
-ImageDataset.TwitterFDL2015.json
+env/
 
-venv/
+.vscode/
 
-test-directory/
+server/.vscode/
+
+server/__pycache__/
