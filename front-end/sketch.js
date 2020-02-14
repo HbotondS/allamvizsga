@@ -38,10 +38,12 @@ function setup() {
     extraCanvas.translate(-canvasSize / 2, -canvasSize / 2);
 
     document.getElementById('loadBtn').onclick = () => {
+        const t0 = performance.now();
         document.getElementById('loading').style.visibility = 'visible';
 
 
         for (let i = 1; i <= 20; i++) {
+            // there is a callback function for loadImage when the image is loaded
             let img = loadImage('images/row-images/1k/' + i + '.jpg');
             images.push(img);
         }
@@ -65,6 +67,8 @@ function setup() {
                     }
                 }
             }
+            const t1 = performance.now();
+            console.log("Loading images images took: " + (t1 - t0) + " milliseconds.");
 
             console.log(`cutting done, images2: ${images2.length}`);
             canDraw = true;
