@@ -1,8 +1,11 @@
-import os, json
+import json
+import os
+from http.server import BaseHTTPRequestHandler, HTTPServer
+import re
 
 
 def getImages():
-    rootdir = 'C:/Users/Boti/Desktop/python server testing/server/test-directory'
+    rootdir = 'C:/Users/Boti/Desktop/allamvizsga/server/test-directory'
 
     myjson = {
         'size': 0,
@@ -20,12 +23,11 @@ def getImages():
             myjson['images'].append(file_path)
 
     myjson['size'] = nr_files
-    # print(json.dumps(myjson))
     return json.dumps(myjson)
 
 
 def readJson():
-    file = 'C:/Users/Boti/Desktop/python server testing/server/test.json'
+    file = 'C:/Users/Boti/Desktop/allamvizsga/server/test.json'
     data = []
 
     with open(file) as f:
@@ -37,6 +39,31 @@ def readJson():
             print(k['_id'])
 
 
+class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
+
+    def do_GET(self):
+        regex = r"\/image\/.+\b"
+        print(self.path)
+        print(re.match(regex, self.path, re.MULTILINE))
+        if self.path == '/images':
+            self.send_response(200)
+            self.send_header('Content-type', 'application/json')
+            self.send_header('Origin', 'localhost')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.end_headers()
+            self.wfile.write(bytes(getImages(), 'utf-8'))
+        elif re.match(regex, self.path, re.MULTILINE):
+            self.send_response(200)
+            self.send_header('Content-type', 'image/jpeg')
+            self.send_header('Origin', 'localhost')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.end_headers()
+            file = 'C:/Users/Boti/Desktop/allamvizsga/server/test-directory/1.jpg'
+            f = open(file, 'rb')
+            fr = f.read(1024)
+            self.wfile.write(fr)
 
 
-readJson()
+print("server started...")
+httpd = HTTPServer(('localhost', 8000), SimpleHTTPRequestHandler)
+httpd.serve_forever()
