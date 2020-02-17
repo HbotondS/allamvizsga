@@ -1,8 +1,9 @@
 let name;
 let file;
+let img;
 
 function setup() {
-    createCanvas(100, 100);
+    createCanvas(1000, 1000);
 
     document.getElementById("title").onchange = () => {
         name = document.getElementById("title").value;
@@ -29,8 +30,11 @@ function setup() {
         request.open(method, url, shouldBeAsync);
         request.send(postData);
     }
+
+    img = loadImage('http://127.0.0.1:8000/media/images/2019-10-19_09.51.49.jpg');
 }
 
 function draw() {
     background(0);
+    image(img, 0, 0);
 }
