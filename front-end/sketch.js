@@ -1,6 +1,5 @@
 let images = [];
 let images2 = [];
-let canDraw = false;
 
 let extraCanvas;
 let canvasSize = Math.round(Math.sqrt(1000)) * 50;
@@ -42,19 +41,13 @@ function setup() {
         document.getElementById('loading').style.visibility = 'visible';
 
 
+        extraCanvas.clear();
+        let x = 0, y = 0, k = 0;
         for (let i = 1; i <= 20; i++) {
             // there is a callback function for loadImage when the image is loaded
-            let img = loadImage('images/row-images/1k/' + i + '.jpg');
-            images.push(img);
-        }
-
-        setTimeout(() => {
-            console.log(`start cutting, images: ${images.length}`);
-            let x = 0, y = 0, k = 0;
-            extraCanvas.clear();
-            for (let i = 0; i < images.length; i++) {
+            loadImage('images/row-images/1k/' + i + '.jpg', (data) => {
                 for (let j = 0; j < 50; j++) {
-                    let img = images[i].get(50 * j, 0, 50, 50);
+                    let img = data.get(50 * j, 0, 50, 50);
                     images2.push(img);
 
                     extraCanvas.image(img, x, y);
@@ -66,17 +59,15 @@ function setup() {
                         k = 0;
                     }
                 }
-            }
-            const t1 = performance.now();
-            console.log("Loading images images took: " + (t1 - t0) + " milliseconds.");
+            });
+            // images.push(img);
+        }
+        const t1 = performance.now();
+        console.log("Loading images images took: " + (t1 - t0) + " milliseconds.");
 
-            console.log(`cutting done, images2: ${images2.length}`);
-            canDraw = true;
+        document.getElementById('loading').style.visibility = 'hidden';
 
-            document.getElementById('loading').style.visibility = 'hidden';
-        }, 1000);
-
-        console.log(`load done, images: ${images.length}`);
+        console.log(`load done`);
     };
 
     document.getElementById('rndBtn').onclick = () => {
