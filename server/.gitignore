@@ -8,4 +8,8 @@ server/.vscode/
 
 server/__pycache__/
 
+server/quickstart/__pycache__/
+
+api/__pycache__/
+
 media/
