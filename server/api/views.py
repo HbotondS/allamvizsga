@@ -10,6 +10,6 @@ class ImageViewSet(viewsets.ModelViewSet):
 
     def post(self, request, *args, **kwargs):
         image = request.data['image']
-        name = request.data['name']
+        folder = request.data['folder']
         Image.objects.create(name=name, image=image)
         return HttpRequest({'message': 'Image created'}, status=200)
