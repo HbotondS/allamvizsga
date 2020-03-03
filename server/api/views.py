@@ -1,5 +1,5 @@
 from rest_framework import viewsets
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponse
 from .models import Image
 from .serializers import ImageSerializer
 
@@ -13,3 +13,7 @@ class ImageViewSet(viewsets.ModelViewSet):
         folder = request.data['folder']
         Image.objects.create(name=name, image=image)
         return HttpRequest({'message': 'Image created'}, status=200)
+
+    def delete(self, request):
+        Image.objects.all().delete()
+        return HttpResponse(content='Images deleted', status=200)
