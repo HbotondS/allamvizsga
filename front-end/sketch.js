@@ -45,29 +45,30 @@ function setup() {
         document.getElementById('loading').style.visibility = 'visible';
         extraCanvas.clear();
         let x = 0, y = 0, k = 0;
-        getImages((data) => {
-            for (let j = 0; j < 50; j++) {
-                let img = data.get(50 * j, 0, 50, 50);
-                images.push(img);
+        getImages("http://127.0.0.1:8000/images",
+            (data) => {
+                for (let j = 0; j < 50; j++) {
+                    let img = data.get(50 * j, 0, 50, 50);
+                    images.push(img);
 
-                extraCanvas.image(img, x, y);
-                x += 50;
-                k++;
-                if (k === canvasSize / 50) {
-                    y += 50;
-                    x = 0;
-                    k = 0;
+                    extraCanvas.image(img, x, y);
+                    x += 50;
+                    k++;
+                    if (k === canvasSize / 50) {
+                        y += 50;
+                        x = 0;
+                        k = 0;
+                    }
                 }
-            }
-        },
-        () => {
-            const t1 = performance.now();
-            print(`Loading images images took: ${(t1 - t0)} milliseconds.`);
-    
-            document.getElementById('loading').style.visibility = 'hidden';
-    
-            print('load done');
-        });
+            },
+            () => {
+                const t1 = performance.now();
+                print(`Loading images images took: ${(t1 - t0)} milliseconds.`);
+
+                document.getElementById('loading').style.visibility = 'hidden';
+
+                print('load done');
+            });
     };
 
     document.getElementById('rndBtn').onclick = () => {

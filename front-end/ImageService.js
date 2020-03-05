@@ -6,14 +6,16 @@
  * @since 29.02.2020
  * @author Botond Hegyi
  */
-function getImages(callback, timeCallBack) {
-    loadJSON("http://127.0.0.1:8000/images", (data) => {
-        print(data.count);
-        for (let i = 0; i < data.count; i++) {
+function getImages(url, callback, timeCallBack) {
+    loadJSON(url, (data) => {
+        for (let i = 0; i < data.results.length; i++) {
             let imgURL = data.results[i].image
             loadImage(imgURL, (img) => {
                 callback(img);
             })
+        }
+        if (data.next) {
+            getImages(data.next, callback, timeCallBack);
         }
         timeCallBack();
     })
