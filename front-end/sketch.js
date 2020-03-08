@@ -6,12 +6,12 @@
 let images = [];
 
 let extraCanvas;
-let canvasSize = Math.round(Math.sqrt(1000)) * 50;
+let canvasSize = Math.round(Math.sqrt(10000)) * 50;
 
 let myWindowWidth;
 let myWindowHeight;
 
-let zoom = 1000;
+let zoom = 20000;
 let posX = 0;
 let posY = 0;
 

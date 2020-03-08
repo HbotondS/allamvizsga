@@ -27,9 +27,9 @@ function setup() {
             let url = 'http://127.0.0.1:8000/images/'
             let method = 'POST'
             const shouldBeAsync = true
-            console.log(files)
+            // console.log(files)
             for (let i = 0; i < files.length; i++) {
-                console.log(files[i])
+                // console.log(files[i])
                 var postData = new FormData()
                 postData.append('folder', folder.value())
                 postData.append('image', files[i], files[i].name)
@@ -42,6 +42,7 @@ function setup() {
                 request.open(method, url, shouldBeAsync)
                 request.send(postData)
             }
+            print('done')
         }
     }
 }
