@@ -5,7 +5,7 @@ from .models import ImageData, MergedImageData
 class ImageSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ImageData
-        fields = ['folder', '_id', 'image']
+        fields = ['folder', '_id', 'date', 'image']
 
 
 class MergedImageSerializer(serializers.HyperlinkedModelSerializer):

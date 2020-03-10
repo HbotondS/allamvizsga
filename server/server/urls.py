@@ -17,20 +17,21 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from server.quickstart import views
-from api.views import ImageViewSet, MergedImageViewSet
 
 from django.conf import settings
 from django.conf.urls.static import static
+from api.views import ImageViewSet, MergedImageViewSet
 
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
 router.register(r'groups', views.GroupViewSet)
 router.register(r'images', ImageViewSet)
-router.register(r'mergedpics', MergedImageViewSet)
+router.register(r'mergedimages', MergedImageViewSet)
 
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('api/', include('api.urls')),
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
