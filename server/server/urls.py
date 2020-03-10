@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from server.quickstart import views
-from api.views import ImageViewSet
+from api.views import ImageViewSet, MergedImageViewSet
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -25,7 +25,8 @@ from django.conf.urls.static import static
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
 router.register(r'groups', views.GroupViewSet)
-router.register('images', ImageViewSet)
+router.register(r'images', ImageViewSet)
+router.register(r'mergedpics', MergedImageViewSet)
 
 
 urlpatterns = [

@@ -1,7 +1,8 @@
 from rest_framework import viewsets
+from rest_framework.response import Response
 from django.http import HttpRequest, HttpResponse
-from .models import ImageData
-from .serializers import ImageSerializer
+from .models import ImageData, MergedImageData
+from .serializers import ImageSerializer, MergedImageSerializer
 
 
 class ImageViewSet(viewsets.ModelViewSet):
@@ -17,3 +18,19 @@ class ImageViewSet(viewsets.ModelViewSet):
     def delete(self, request):
         ImageData.objects.all().delete()
         return HttpResponse(content='Images deleted', status=200)
+
+    def list(self, request, pk=None):
+        queryset = ImageData.objects.all()
+        serializer = ImageSerializer(queryset, many=True)
+        # todo: merge images into rows
+        return Response(serializer.data)
+
+
+class MergedImageViewSet(viewsets.ModelViewSet):
+    queryset = MergedImageData.objects.all()
+    serializer_class = MergedImageSerializer
+
+    def list(self, request, pk=None):
+        queryset = MergedImageData.objects.all()
+        serializer = MergedImageSerializer(queryset, many=True)
+        return Response(serializer.data)
