@@ -1,16 +1,20 @@
 from django.db import models
 from django_resized import ResizedImageField
-import datetime
+import random
+import string
 
 
 def upload_path(instance, filename):
-    return '/'.join(['images', str(instance.folder) , filename])
+    return '/'.join(['images', filename])
+
+
+def random_id():
+    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
 
 
 class ImageData(models.Model):
-    folder = models.CharField(max_length=32, blank=False)
-    _id = models.CharField(max_length=30)
-    date = models.DateField(null=False, default=datetime.date.today)
+    _id = models.CharField(max_length=30, default=random_id)
+    date = models.DateField(null=False)
     image = ResizedImageField(blank=False, null=False, upload_to=upload_path, size=[50, 50])
 
 

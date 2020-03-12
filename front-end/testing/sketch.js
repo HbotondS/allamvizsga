@@ -4,6 +4,13 @@ let img;
 let images = []
 let extraCanvas;
 
+function randomDate() {
+    var date1 = new Date(2010, 02, 12)
+    var date2 = new Date(2020, 02, 12)
+    var date = new Date(+date1 + Math.random() * (date2 - date1));
+    return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+}
+
 function setup() {
     // loadJSON("http://127.0.0.1:8000/images", (data) => {
     //     print(data.count)
@@ -31,7 +38,7 @@ function setup() {
             for (let i = 0; i < files.length; i++) {
                 // console.log(files[i])
                 var postData = new FormData()
-                postData.append('folder', folder.value())
+                postData.append('date', randomDate())
                 postData.append('image', files[i], files[i].name)
 
                 let request = new XMLHttpRequest()
