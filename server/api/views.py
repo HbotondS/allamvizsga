@@ -1,9 +1,10 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from .models import ImageData, MergedImageData
 from .serializers import ImageSerializer, MergedImageSerializer
 import logging
+import random, json
 
 
 logger = logging.getLogger(__name__)
@@ -44,6 +45,12 @@ class ImageViewSet(viewsets.ModelViewSet):
         # todo: merge images into rows
         return Response(serializer.data)
 
+
+def RandomImages(request):
+    l = list(ImageData.objects.all().values_list('_id'))
+    random.shuffle(l)
+    return JsonResponse({'data': l})
+    
 
 class MergedImageViewSet(viewsets.ModelViewSet):
     queryset = MergedImageData.objects.all()

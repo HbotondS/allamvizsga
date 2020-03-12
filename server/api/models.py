@@ -15,7 +15,7 @@ def random_id():
 class ImageData(models.Model):
     _id = models.CharField(max_length=30, default=random_id)
     date = models.DateField(null=False)
-    image = ResizedImageField(blank=False, null=False, upload_to=upload_path, size=[50, 50])
+    image = models.ImageField(blank=False, null=False, upload_to=upload_path)
 
 
 class MergedImageData(models.Model):
