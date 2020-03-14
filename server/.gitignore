@@ -15,3 +15,7 @@ api/__pycache__/
 media/
 
 api/migrations
+
+client/__pycache__/
+
+client/migrations

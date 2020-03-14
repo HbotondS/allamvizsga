@@ -79,6 +79,18 @@ function setup() {
         print(`Random order images took: ${(t1 - t0)} milliseconds.`);
     };
 
+    document.getElementById('rndBtn2').onclick = () => {
+        const t0 = performance.now();
+        loadJSON('http://127.0.0.1:8000/randomimages', json => {
+            ids = json.data;
+            images.sort(function(a, b) {
+                return ids.indexOf(a.id) - images.indexOf(b.id);
+            })
+        });
+        const t1 = performance.now();
+        print(`Random 2 order images took: ${(t1 - t0)} milliseconds.`);
+    };
+
     document.getElementById('revBtn').onclick = () => {
         const t0 = performance.now();
         images.reverse();
