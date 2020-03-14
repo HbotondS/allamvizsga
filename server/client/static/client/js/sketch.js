@@ -19,7 +19,7 @@ function reRenderBuffer() {
     extraCanvas.clear();
     let x = 0, y = 0, k = 0;
     for (let j = 0; j < images.length; j++) {
-        extraCanvas.image(images[j], x, y);
+        extraCanvas.image(images[j].image, x, y);
         x += 50;
         k++;
         if (k === canvasSize / 50) {
@@ -46,10 +46,11 @@ function setup() {
         extraCanvas.clear();
         let x = 0, y = 0, k = 0;
         getImages("http://127.0.0.1:8000/images",
-            (data) => {
+            (data, imageData) => {
                 for (let j = 0; j < 50; j++) {
                     let img = data.get(50 * j, 0, 50, 50);
-                    images.push(img);
+                    imageData.image = img;
+                    images.push(imageData);
 
                     extraCanvas.image(img, x, y);
                     x += 50;
@@ -85,7 +86,7 @@ function setup() {
             ids = json.data;
             images.sort(function(a, b) {
                 return ids.indexOf(a.id) - images.indexOf(b.id);
-            })
+            });
         });
         const t1 = performance.now();
         print(`Random 2 order images took: ${(t1 - t0)} milliseconds.`);
