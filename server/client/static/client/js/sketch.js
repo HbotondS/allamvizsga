@@ -6,12 +6,12 @@
 let images = [];
 
 let extraCanvas;
-let canvasSize = Math.round(Math.sqrt(10000)) * 50;
+let canvasSize = Math.round(Math.sqrt(1000)) * 50;
 
 let myWindowWidth;
 let myWindowHeight;
 
-let zoom = 20000;
+let zoom = 1000;
 let posX = 0;
 let posY = 0;
 
@@ -31,8 +31,8 @@ function reRenderBuffer() {
 }
 
 function setup() {
-    myWindowWidth = windowWidth * 89 / 100;
-    myWindowHeight = windowHeight - 10;
+    myWindowWidth = windowWidth * 80 / 100;
+    myWindowHeight = windowHeight - 50;
     createCanvas(myWindowWidth, myWindowHeight, WEBGL);
 
     zoom = canvasSize;
@@ -46,13 +46,16 @@ function setup() {
         extraCanvas.clear();
         let x = 0, y = 0, k = 0;
         getImages("http://127.0.0.1:8000/images",
-            (data, imageData) => {
+            (data, id, date) => {
                 for (let j = 0; j < 50; j++) {
                     let img = data.get(50 * j, 0, 50, 50);
+                    var imageData = new ImageData();
+                    imageData.id = id;
+                    imageData.date = date;
                     imageData.image = img;
                     images.push(imageData);
 
-                    extraCanvas.image(img, x, y);
+                    extraCanvas.image(imageData.image, x, y);
                     x += 50;
                     k++;
                     if (k === canvasSize / 50) {
@@ -84,9 +87,11 @@ function setup() {
         const t0 = performance.now();
         loadJSON('http://127.0.0.1:8000/randomimages', json => {
             ids = json.data;
-            images.sort(function(a, b) {
+            print(ids);
+            images = images.sort(function(a, b) {
                 return ids.indexOf(a.id) - images.indexOf(b.id);
             });
+            reRenderBuffer();
         });
         const t1 = performance.now();
         print(`Random 2 order images took: ${(t1 - t0)} milliseconds.`);
