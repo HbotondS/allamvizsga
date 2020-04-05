@@ -9,7 +9,7 @@ def upload_path(instance, filename):
 
 
 def random_id():
-    return [''.join(random.choices(string.ascii_uppercase + string.digits, k=10)) for _ in range(50)]
+    return ','.join([''.join(random.choices(string.ascii_uppercase + string.digits, k=10)) for _ in range(50)])
 
 
 class ImageData(models.Model):

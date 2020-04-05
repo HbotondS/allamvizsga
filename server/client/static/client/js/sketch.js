@@ -47,11 +47,13 @@ function setup() {
         let x = 0, y = 0, k = 0;
         getImages("http://127.0.0.1:8000/images",
             (data, id, date) => {
+                ids = id.split(',');
+                dates = date.split(',');
                 for (let j = 0; j < 50; j++) {
                     let img = data.get(50 * j, 0, 50, 50);
                     var imageData = new ImageData();
-                    imageData.id = id;
-                    imageData.date = date;
+                    imageData.id = ids[j];
+                    imageData.date = dates[j];
                     imageData.image = img;
                     images.push(imageData);
 
@@ -89,7 +91,7 @@ function setup() {
             ids = json.data;
             print(ids);
             images = images.sort(function(a, b) {
-                return ids.indexOf(a.id) - images.indexOf(b.id);
+                return ids.indexOf(a.id) - ids.indexOf(b.id);
             });
             reRenderBuffer();
         });

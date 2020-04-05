@@ -47,7 +47,10 @@ class ImageViewSet(viewsets.ModelViewSet):
 
 
 def RandomImages(request):
-    l = list(ImageData.objects.all().values_list('_id', flat=True))
+    ids = list(ImageData.objects.all().values_list('_id', flat=True))
+    l = []
+    for i in range(len(ids)):
+        l = l + (ids[i].split(','))
     random.shuffle(l)
     return JsonResponse({'data': l})
     
