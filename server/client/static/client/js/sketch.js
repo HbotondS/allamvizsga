@@ -31,6 +31,8 @@ function reRenderBuffer() {
 }
 
 function setup() {
+    frameRate(24);
+
     myWindowWidth = windowWidth * 80 / 100;
     myWindowHeight = windowHeight - 50;
     createCanvas(myWindowWidth, myWindowHeight, WEBGL);
@@ -105,6 +107,28 @@ function setup() {
         reRenderBuffer();
         const t1 = performance.now();
         print(`Reverse order images took: ${(t1 - t0)} milliseconds.`);
+    };
+
+    document.getElementById('histBtn').onclick = () => {
+        hist = {};
+        for (let i = 0; i < images.length; i++) {
+            if (hist[images[i].date] === undefined) {
+                hist[images[i].date] = [images[i]];
+            } else {
+                hist[images[i].date].push(images[i]);
+            }
+        }
+
+        extraCanvas.clear();
+        let x = 0, y = 0, k = 0;
+        for (let key in hist) {
+            print(hist[key]);
+            for (let j = 0; j < hist[key].length; j++) {
+                extraCanvas.image(hist[key][j].image, x, y);
+                y += 50;
+            }
+            y = 0; x += 50;
+        }
     };
 }
 
