@@ -3,7 +3,7 @@
  * @author Botond Hegyi
  */
 
-let images = [];
+let imageDatas = [];
 
 let extraCanvas;
 let canvasSize = Math.round(Math.sqrt(1000)) * 50;
@@ -15,11 +15,13 @@ let zoom = 1000;
 let posX = 0;
 let posY = 0;
 
+// rerender the extraCanvas buffer whenever 
+// the images order changed
 function reRenderBuffer() {
     extraCanvas.clear();
     let x = 0, y = 0, k = 0;
-    for (let j = 0; j < images.length; j++) {
-        extraCanvas.image(images[j].image, x, y);
+    imageDatas.forEach(imageData => {
+        extraCanvas.image(imageData.image, x, y);
         x += 50;
         k++;
         if (k === canvasSize / 50) {
@@ -27,7 +29,7 @@ function reRenderBuffer() {
             x = 0;
             k = 0;
         }
-    }
+    });
 }
 
 function setup() {
@@ -51,14 +53,12 @@ function setup() {
             (data, id, date) => {
                 ids = id.split(',');
                 dates = date.split(',');
-                for (let j = 0; j < 50; j++) {
-                    let img = data.get(50 * j, 0, 50, 50);
-                    var imageData = new ImageData();
-                    imageData.id = ids[j];
-                    imageData.date = dates[j];
-                    imageData.image = img;
-                    images.push(imageData);
+                for (let i = 0; i < 50; i++) {
+                    let img = data.get(50 * i, 0, 50, 50);
+                    var imageData = new ImageData(ids[i], dates[i], img);
+                    imageDatas.push(imageData);
 
+                    // draw image on the buffer
                     extraCanvas.image(imageData.image, x, y);
                     x += 50;
                     k++;
@@ -81,7 +81,7 @@ function setup() {
 
     document.getElementById('rndBtn').onclick = () => {
         const t0 = performance.now();
-        shuffle(images, true);
+        shuffle(imageDatas, true);
         reRenderBuffer();
         const t1 = performance.now();
         print(`Random order images took: ${(t1 - t0)} milliseconds.`);
@@ -89,10 +89,12 @@ function setup() {
 
     document.getElementById('rndBtn2').onclick = () => {
         const t0 = performance.now();
+        // get random id list from the server and sort imageDatas
+        // according to the fetched ids
         loadJSON('http://127.0.0.1:8000/randomimages', json => {
             ids = json.data;
             print(ids);
-            images = images.sort(function(a, b) {
+            imageDatas = imageDatas.sort(function(a, b) {
                 return ids.indexOf(a.id) - ids.indexOf(b.id);
             });
             reRenderBuffer();
@@ -103,22 +105,24 @@ function setup() {
 
     document.getElementById('revBtn').onclick = () => {
         const t0 = performance.now();
-        images.reverse();
+        imageDatas.reverse();
         reRenderBuffer();
         const t1 = performance.now();
         print(`Reverse order images took: ${(t1 - t0)} milliseconds.`);
     };
 
+    // diplay the images on a histogram, grouped by dates
     document.getElementById('histBtn').onclick = () => {
         hist = {};
-        for (let i = 0; i < images.length; i++) {
-            if (hist[images[i].date] === undefined) {
-                hist[images[i].date] = [images[i]];
+        imageDatas.forEach(imageData => {
+            if (hist[imageData.date] === undefined) {
+                hist[imageData.date] = [imageData];
             } else {
-                hist[images[i].date].push(images[i]);
+                hist[imageData.date].push(imageData);
             }
-        }
-        print(Object.keys(hist).length);
+        });
+        // print(Object.keys(hist).length);
+        // sort the dictionary by dates
         hist = sortDict(hist);
 
 
@@ -126,10 +130,10 @@ function setup() {
         let x = 0, y = 0, k = 0;
         for (let key in hist) {
             // print(hist[key]);
-            for (let j = 0; j < hist[key].length; j++) {
-                extraCanvas.image(hist[key][j].image, x, y);
+            hist[key].forEach(element => {
+                extraCanvas.image(element.image, x, y);
                 y += 50;
-            }
+            });
             y = 0; x += 50;
         }
     };

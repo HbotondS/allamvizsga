@@ -9,13 +9,13 @@
 function getImages(url, callback, timeCallBack) {
     loadJSON(url, (data) => {
         print(data.length)
-        for (let i = 0; i < data.length; i++) {
-            let imgURL = data[i].image
+        data.forEach(element => {
+            let imgURL = element.image
             loadImage('http://127.0.0.1:8000' + imgURL, (img) => {
                 document.getElementById('loading').style.visibility = 'visible';
-                setTimeout( () => callback(img, data[i]._id, data[i].date), 0);
+                setTimeout( () => callback(img, element._id, element.date), 0);
                 timeCallBack();
             })
-        }
+        });
     });
 }
