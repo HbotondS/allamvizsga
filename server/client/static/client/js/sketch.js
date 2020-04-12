@@ -118,11 +118,14 @@ function setup() {
                 hist[images[i].date].push(images[i]);
             }
         }
+        print(Object.keys(hist).length);
+        hist = sortDict(hist);
+
 
         extraCanvas.clear();
         let x = 0, y = 0, k = 0;
         for (let key in hist) {
-            print(hist[key]);
+            // print(hist[key]);
             for (let j = 0; j < hist[key].length; j++) {
                 extraCanvas.image(hist[key][j].image, x, y);
                 y += 50;
