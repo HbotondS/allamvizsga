@@ -48,23 +48,23 @@ function setup() {
         const t0 = performance.now();
         document.getElementById('loading').style.visibility = 'visible';
         extraCanvas.clear();
-        let x = 0, y = 0, k = 0;
+        let posX = 0, posY = 0, k = 0;
         getImages("http://127.0.0.1:8000/images",
             (data, id, date) => {
                 ids = id.split(',');
                 dates = date.split(',');
                 for (let i = 0; i < 50; i++) {
                     let img = data.get(50 * i, 0, 50, 50);
-                    var imageData = new ImageData(ids[i], dates[i], img);
+                    var imageData = new ImageData(ids[i], dates[i], img, {x: posX, y: posY});
                     imageDatas.push(imageData);
 
                     // draw image on the buffer
-                    extraCanvas.image(imageData.image, x, y);
-                    x += 50;
+                    extraCanvas.image(imageData.image, posX, posY);
+                    posX += 50;
                     k++;
                     if (k === canvasSize / 50) {
-                        y += 50;
-                        x = 0;
+                        posY += 50;
+                        posX = 0;
                         k = 0;
                     }
                 }
