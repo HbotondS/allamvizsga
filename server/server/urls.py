@@ -20,15 +20,17 @@ from server.quickstart import views
 
 from django.conf import settings
 from django.conf.urls.static import static
-from api.views import ImageViewSet, MergedImageViewSet, RandomImages
+from api.views import ImageViewSet, RandomImages, big, BigImageViewSet
 
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
 router.register(r'groups', views.GroupViewSet)
 router.register(r'images', ImageViewSet)
+router.register(r'bigimages', BigImageViewSet)
 
 
 urlpatterns = [
+    path('big/', big),
     path('', include(router.urls)),
     path('api/', include('api.urls')),
     path('admin/', admin.site.urls),
