@@ -1,10 +1,13 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
 from django.http import HttpRequest, HttpResponse, JsonResponse
-from .models import ImageData, MergedImageData
-from .serializers import ImageSerializer, MergedImageSerializer
+from django.core.files import File
+from .models import ImageData, BigImageData
+from .serializers import ImageSerializer, BigImageSerializer
 import logging
 import random, json
+from PIL import Image
+from io import BytesIO
 
 
 logger = logging.getLogger(__name__)
@@ -14,14 +17,27 @@ def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
 
-def merge_images(imageData, img):
-    inserted = False
-    result = MergedImageData.objects.filter(size__lt=50)
-    logger.log('create merged image')
-    if (not result):
-        logger.log('create merged image')
-        MergedImageData.objects.create(ids=imageData._id, size=1, image=img)
-    
+def big(request):
+    imglist = list(ImageData.objects.all())
+    img1 = Image.open(imglist[0].image)
+    img2 = Image.open(imglist[1].image)
+    new_img = Image.new('RGB', (50*50, 100))
+    y_offset = 0
+    new_img.paste(img1, (0, y_offset))
+    y_offset += img1.size[1]
+    new_img.paste(img2, (0, y_offset))
+
+    blob = BytesIO()
+    new_img.save(blob, img1.format)
+    BIG = BigImageData()
+    BIG.image.save('big.jpg', File(blob), save=False)
+    BIG.save()
+    return HttpResponse("Hello, world. You're at the big image index.")    
+
+
+class BigImageViewSet(viewsets.ModelViewSet):
+    queryset = BigImageData.objects.all()
+    serializer_class = BigImageSerializer
 
 
 class ImageViewSet(viewsets.ModelViewSet):
@@ -53,14 +69,3 @@ def RandomImages(request):
         l = l + (ids[i].split(','))
     random.shuffle(l)
     return JsonResponse({'data': l})
-    
-
-class MergedImageViewSet(viewsets.ModelViewSet):
-    queryset = MergedImageData.objects.all()
-    serializer_class = MergedImageSerializer
-
-    def list(self, request, pk=None):
-        queryset = MergedImageData.objects.all()
-        serializer = MergedImageSerializer(queryset, many=True)
-        return Response(serializer.data)
-

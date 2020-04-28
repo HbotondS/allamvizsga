@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ImageData, MergedImageData
+from .models import ImageData, BigImageData
 
 
 class ImageSerializer(serializers.HyperlinkedModelSerializer):
@@ -8,7 +8,7 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['_id', 'date', 'image']
 
 
-class MergedImageSerializer(serializers.HyperlinkedModelSerializer):
+class BigImageSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = MergedImageData
-        fields = ['ids', 'image']
+        model = BigImageData
+        fields = ['image']

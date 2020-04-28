@@ -18,17 +18,15 @@ class ImageData(models.Model):
     image = models.ImageField(blank=False, null=False, upload_to=upload_path)
 
 
-class MergedImageData(models.Model):
-    ids = models.CharField(blank=False, max_length=1500)
-    size = models.IntegerField()
-    image = models.ImageField(upload_to='images/merged')
+class BigImageData(models.Model):
+    image = models.ImageField(upload_to='big')
 
 
 from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
 
 @receiver(pre_delete, sender=ImageData)
-@receiver(pre_delete, sender=MergedImageData)
+@receiver(pre_delete, sender=BigImageData)
 def mymodel_delete(sender, instance, **kwargs):
     # Pass false so FileField doesn't save the model.
     instance.image.delete(False)
