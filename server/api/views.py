@@ -21,11 +21,13 @@ def big(request):
     imglist = list(ImageData.objects.all())
     img1 = Image.open(imglist[0].image)
     img2 = Image.open(imglist[1].image)
-    new_img = Image.new('RGB', (50*50, 100))
+    new_img = Image.new('RGB', (50*50, len(imglist) * 50))
     y_offset = 0
     new_img.paste(img1, (0, y_offset))
-    y_offset += img1.size[1]
-    new_img.paste(img2, (0, y_offset))
+    for i in range(1, len(imglist)):
+        img = Image.open(imglist[i].image)
+        y_offset += img.size[1]
+        new_img.paste(img, (0, y_offset))
 
     blob = BytesIO()
     new_img.save(blob, img1.format)
