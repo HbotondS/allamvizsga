@@ -1,49 +1,56 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
 from django.http import HttpRequest, HttpResponse, JsonResponse
-from django.core.files import File
 from .models import ImageData, BigImageData
 from .serializers import ImageSerializer, BigImageSerializer
-import random, json
+import random
 from PIL import Image
-from io import BytesIO
+from math import ceil, sqrt
 
 
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
 
+def gen_img(imglist):
+    imglist_len = len(imglist)
+    # calculate how many image can fit in a row
+    # to display the images in a square
+    row_len = ceil(sqrt(imglist_len))
+
+    big_img = Image.new('RGB', (50*row_len, 50*row_len))
+    index = 0
+    # used to merge images verticaly
+    y_offset = 0
+    for i in range(row_len):
+        row_img = Image.new('RGB', (50*row_len, 50))
+        # used to merge images verticaly
+        x_offset = 0
+        for j in range(row_len):
+            # if we iterated through the images
+            # we can send back the generated image
+            if index == imglist_len:
+                res = HttpResponse(content_type="image/jpeg")
+                big_img.save(res, "JPEG")
+                return res
+            img = Image.open(imglist[index].image)
+            row_img.paste(img, (x_offset, 0))
+            x_offset += img.size[0]
+            index += 1
+        
+        big_img.paste(row_img, (0, y_offset))
+        y_offset += row_img.size[1]
+
+
 def big(request):
     imglist = list(ImageData.objects.all())
-    new_img = Image.new('RGB', (50*50, len(imglist) * 50))
-    y_offset = 0
-    img = Image.open(imglist[0].image)
-    new_img.paste(img, (0, y_offset))
-    for i in range(1, len(imglist)):
-        img = Image.open(imglist[i].image)
-        y_offset += img.size[1]
-        new_img.paste(img, (0, y_offset))
-
-    res = HttpResponse(content_type="image/jpeg")
-    new_img.save(res, "JPEG")
-    return res
+    return gen_img(imglist)
 
 
 def randomImages(request):
     imglist = list(ImageData.objects.all())
     random.shuffle(imglist)
-    new_img = Image.new('RGB', (50*50, len(imglist) * 50))
-    y_offset = 0
-    img = Image.open(imglist[0].image)
-    new_img.paste(img, (0, y_offset))
-    for i in range(1, len(imglist)):
-        img = Image.open(imglist[i].image)
-        y_offset += img.size[1]
-        new_img.paste(img, (0, y_offset))
-
-    res = HttpResponse(content_type="image/jpeg")
-    new_img.save(res, "JPEG")
-    return res
+    return gen_img(imglist)
 
 
 def histogram(request):
