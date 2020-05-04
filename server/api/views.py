@@ -48,7 +48,8 @@ def randomImages(request):
 
 def histogram(request):
     # todo: implement histogram generation after refactoring of the image store
-    return None
+    print('test logging')
+    return HttpResponse("Hello, world. You're at the histogram index.")
 
 
 class BigImageViewSet(viewsets.ModelViewSet):
