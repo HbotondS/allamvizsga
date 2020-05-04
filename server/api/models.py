@@ -9,12 +9,12 @@ def upload_path(instance, filename):
 
 
 def random_id():
-    return ','.join([''.join(random.choices(string.ascii_uppercase + string.digits, k=10)) for _ in range(50)])
+    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
 
 
 class ImageData(models.Model):
     _id = models.CharField(max_length=256, default=random_id)
-    date = models.CharField(null=False, max_length=600)
+    date = models.DateField(null=False)
     image = models.ImageField(blank=False, null=False, upload_to=upload_path)
 
 
