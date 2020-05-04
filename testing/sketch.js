@@ -6,14 +6,11 @@ let extraCanvas;
 
 function randomDate() {
     var dates = [];
-    for (var i = 0; i < 50; i++) {
-        var date1 = new Date(2019, 09, 12)
-        var date2 = new Date(2020, 02, 12)
-        var date = new Date(+date1 + Math.random() * (date2 - date1));
-        dates.push(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate());
-    }
-    print('dates: ' + dates.toString());
-    return dates.toString();
+    var date1 = new Date(2019, 09, 12)
+    var date2 = new Date(2020, 02, 12)
+    var date = new Date(+date1 + Math.random() * (date2 - date1));
+
+    return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
 }
 
 function setup() {
