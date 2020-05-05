@@ -25,7 +25,7 @@ def gen_img(imglist):
     index = 0
     # used to merge images verticaly
     y_offset = 0
-    for i in range(row_len):
+    for i in range(row_len ):
         row_img = Image.new('RGB', (IMAGE_SIZE*row_len, IMAGE_SIZE))
         # used to merge images verticaly
         x_offset = 0
@@ -33,6 +33,7 @@ def gen_img(imglist):
             # if we iterated through the images
             # we can send back the generated image
             if index == imglist_len:
+                big_img.paste(row_img, (0, y_offset))
                 res = HttpResponse(content_type="image/jpeg")
                 big_img.save(res, "JPEG")
                 return res
@@ -47,6 +48,12 @@ def gen_img(imglist):
 
 def big(request):
     imglist = list(ImageData.objects.all())
+    return gen_img(imglist)
+
+
+def reverseImages(request):
+    imglist = list(ImageData.objects.all())
+    imglist = imglist[::-1]
     return gen_img(imglist)
 
 
