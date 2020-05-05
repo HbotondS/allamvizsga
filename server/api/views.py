@@ -8,6 +8,9 @@ from PIL import Image
 from math import ceil, sqrt
 
 
+IMAGE_SIZE = 50
+
+
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
@@ -18,12 +21,12 @@ def gen_img(imglist):
     # to display the images in a square
     row_len = ceil(sqrt(imglist_len))
 
-    big_img = Image.new('RGB', (50*row_len, 50*row_len))
+    big_img = Image.new('RGB', (IMAGE_SIZE*row_len, IMAGE_SIZE*row_len))
     index = 0
     # used to merge images verticaly
     y_offset = 0
     for i in range(row_len):
-        row_img = Image.new('RGB', (50*row_len, 50))
+        row_img = Image.new('RGB', (IMAGE_SIZE*row_len, IMAGE_SIZE))
         # used to merge images verticaly
         x_offset = 0
         for j in range(row_len):
@@ -71,17 +74,17 @@ def histogram(request):
             img_dict[img_data.date] = [img_data.image]
     
     height = GetMaxFlow(img_dict)
-    big_img = Image.new('RGB', (50*len(img_dict), 50*height))
+    big_img = Image.new('RGB', (IMAGE_SIZE*len(img_dict), IMAGE_SIZE*height))
     x_offset = 0
     for i in img_dict:
         y_offset = 0
-        column_img = Image.new('RGB', (50, 50*height))
+        column_img = Image.new('RGB', (IMAGE_SIZE, IMAGE_SIZE*height))
         for j in img_dict[i]:
             img = Image.open(j)
             column_img.paste(img, (0, y_offset))
             y_offset += img.size[1]
         
-        big_img.paste(column_img, (x_offset, 50*(height - len(img_dict[i]))))
+        big_img.paste(column_img, (x_offset, IMAGE_SIZE*(height - len(img_dict[i]))))
         x_offset += column_img.size[0]
 
     res = HttpResponse(content_type="image/jpeg")
