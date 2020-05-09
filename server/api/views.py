@@ -6,6 +6,7 @@ from .serializers import ImageSerializer, BigImageSerializer
 import random
 from PIL import Image
 from math import ceil, sqrt
+import timeit
 
 
 IMAGE_SIZE = 50
@@ -15,7 +16,7 @@ def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
 
-def gen_img(imglist):
+def gen_img(imglist, start):
     imglist_len = len(imglist)
     # calculate how many image can fit in a row
     # to display the images in a square
@@ -36,31 +37,43 @@ def gen_img(imglist):
                 big_img.paste(row_img, (0, y_offset))
                 res = HttpResponse(content_type="image/jpeg")
                 big_img.save(res, "JPEG")
+                big_img.close()
+                # -------
+                stop = timeit.default_timer()
+                print('Time: ', stop - start)
+                # -------
                 return res
-            img = Image.open(imglist[index].image)
-            row_img.paste(img, (x_offset, 0))
-            x_offset += img.size[0]
+            with Image.open(imglist[index].image) as img:
+                row_img.paste(img, (x_offset, 0))
+                x_offset += img.size[0]
+
+            print(index)
             index += 1
         
         big_img.paste(row_img, (0, y_offset))
         y_offset += row_img.size[1]
+        row_img.close()
 
 
 def big(request):
+    start = timeit.default_timer()
     imglist = list(ImageData.objects.all())
-    return gen_img(imglist)
+    print(len(imglist))
+    return gen_img(imglist, start)
 
 
 def reverseImages(request):
+    start = timeit.default_timer()
     imglist = list(ImageData.objects.all())
     imglist = imglist[::-1]
-    return gen_img(imglist)
+    return gen_img(imglist, start)
 
 
-def randomImages(request):
+def randomImages(request):    
+    start = timeit.default_timer()
     imglist = list(ImageData.objects.all())
     random.shuffle(imglist)
-    return gen_img(imglist)
+    return gen_img(imglist, start)
 
 
 # return the length of the longest element from the dictionary
@@ -72,6 +85,7 @@ def GetMaxFlow(dict):
 def histogram(request):
     # print('test logging')
     # group images by date
+    start = timeit.default_timer()
     img_dict = {}
     imglist = list(ImageData.objects.all())
     for img_data in imglist:
@@ -96,6 +110,10 @@ def histogram(request):
 
     res = HttpResponse(content_type="image/jpeg")
     big_img.save(res, "JPEG")
+    # -------
+    stop = timeit.default_timer()
+    print('Time: ', stop - start)
+    # -------
     return res
 
 
