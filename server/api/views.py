@@ -7,6 +7,8 @@ import random
 from PIL import Image
 from math import ceil, sqrt
 import timeit
+import cv2
+import os
 
 
 IMAGE_SIZE = 50
@@ -22,37 +24,31 @@ def gen_img(imglist, start):
     # to display the images in a square
     row_len = ceil(sqrt(imglist_len))
 
-    big_img = Image.new('RGB', (IMAGE_SIZE*row_len, IMAGE_SIZE*row_len))
+    big_img = []
     index = 0
-    # used to merge images verticaly
-    y_offset = 0
     for i in range(row_len ):
-        row_img = Image.new('RGB', (IMAGE_SIZE*row_len, IMAGE_SIZE))
-        # used to merge images verticaly
-        x_offset = 0
+        row_img = []
         for j in range(row_len):
             # if we iterated through the images
             # we can send back the generated image
             if index == imglist_len:
-                big_img.paste(row_img, (0, y_offset))
+                # big_img.append(cv2.hconcat(row_img))
+                big_output = cv2.vconcat(big_img)
                 res = HttpResponse(content_type="image/jpeg")
-                big_img.save(res, "JPEG")
-                big_img.close()
+                cv2.imwrite('big.jpg', big_output)
+                big = Image.open('big.jpg')
+                big.save(res, 'JPEG')
+                os.remove('big.jpg')
                 # -------
                 stop = timeit.default_timer()
                 print('Time: ', stop - start)
                 # -------
                 return res
-            with Image.open(imglist[index].image) as img:
-                row_img.paste(img, (x_offset, 0))
-                x_offset += img.size[0]
-
-            print(index)
+            
+            row_img.append(cv2.imread(imglist[index].image.path))
             index += 1
         
-        big_img.paste(row_img, (0, y_offset))
-        y_offset += row_img.size[1]
-        row_img.close()
+        big_img.append(cv2.hconcat(row_img))
 
 
 def big(request):
