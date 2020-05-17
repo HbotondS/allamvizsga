@@ -96,7 +96,6 @@ function draw() {
     camera(posX, posY, zoom*2, posX, posY, 0, 0, 1, 0);
     imageMode(CENTER);
     if (this.img !== undefined) {
-        print('rajs')
         image(this.img, 0, 0);
     }
 }

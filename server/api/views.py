@@ -9,6 +9,7 @@ from math import ceil, sqrt
 import timeit
 import cv2
 import os
+import numpy as np
 
 
 IMAGE_SIZE = 50
@@ -26,13 +27,15 @@ def gen_img(imglist, start):
 
     big_img = []
     index = 0
-    for i in range(row_len ):
+    for i in range(row_len):
         row_img = []
         for j in range(row_len):
             # if we iterated through the images
             # we can send back the generated image
             if index == imglist_len:
-                # big_img.append(cv2.hconcat(row_img))
+                big_img.append(cv2.hconcat(row_img))
+                blank = np.zeros(shape=[50, big_img[0].shape[1] - big_img[len(big_img)-1].shape[1], 3], dtype=np.uint8)
+                big_img[len(big_img)-1] = cv2.hconcat([big_img[len(big_img)-1], blank])
                 big_output = cv2.vconcat(big_img)
                 res = HttpResponse(content_type="image/jpeg")
                 cv2.imwrite('big.jpg', big_output)
