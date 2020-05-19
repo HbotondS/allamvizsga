@@ -1,61 +1,36 @@
-let folder;
-let files;
-let img;
-let images = []
-let extraCanvas;
-
-function randomDate() {
-    var dates = [];
-    var date1 = new Date(2019, 09, 12)
-    var date2 = new Date(2020, 02, 12)
-    var date = new Date(+date1 + Math.random() * (date2 - date1));
-
-    return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+function mouseClicked() {
+    print(mouseX - 250)
 }
 
-function setup() {
-    // loadJSON("http://127.0.0.1:8000/images", (data) => {
-    //     print(data.count)
-    //     for (let i = 0; i < data.count; i++) {
-    //         let imgURL = data.results[i].image
-    //         print(imgURL)
-    //         loadImage(imgURL, (img) => {
-    //             images.push(img)
-    //         })
-    //     }
-    // })
+let zoom = 100;
 
-    folder = select('#folder')
+const MIN_ZOOM = 100;
+const MAX_ZOOM = 300;
 
-    document.getElementById('saveImage').onclick = () => {
-        console.log('hello')
-        files = document.getElementById('file').files
-        if (files.length == 0) {
-            window.alert("no files selected");
-        } else {
-            let url = 'http://127.0.0.1:8000/images/'
-            let method = 'POST'
-            const shouldBeAsync = true
-            // console.log(files)
-            for (let i = 0; i < files.length; i++) {
-                // console.log(files[i])
-                var postData = new FormData()
-                postData.append('date', randomDate())
-                postData.append('image', files[i], files[i].name)
-
-                let request = new XMLHttpRequest()
-                request.onload = function() {
-                    var status = request.status
-                    var data = request.responseText
-                }
-                request.open(method, url, shouldBeAsync)
-                request.send(postData)
-            }
-            print('done')
-        }
+function mouseWheel(event) {
+    const zoomSpeed = 20;
+    if (event.delta < 0 && zoom > MIN_ZOOM) {
+        zoom -= zoomSpeed;
+    }
+    if (event.delta > 0 && zoom < MAX_ZOOM) {
+        zoom += zoomSpeed;
     }
 }
 
+function setup() {
+    createCanvas(500, 500, WEBGL);
+}
+
 function draw() {
+    // camera(0, 0, zoom, 0, 0, 0, 0, 1, 0);
     background(0);
+    let corner = 105;
+    if ((mouseX - 250) < zoom/2 && mouseX - 250 > -zoom/2
+        && (mouseY - 250) < zoom/2 && (mouseY - 250) > -zoom/2) {
+        fill(102, 255, 50)
+    } else {
+        fill(255, 102, 80)
+    }
+    rectMode(CENTER);
+    rect(0, 0, zoom, zoom)
 }
