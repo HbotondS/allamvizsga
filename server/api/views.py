@@ -10,6 +10,7 @@ import timeit
 import cv2
 import os
 import numpy as np
+import threading
 
 
 IMAGE_SIZE = 50
@@ -17,6 +18,18 @@ IMAGE_SIZE = 50
 
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
+
+
+def multithread_imggen(big_img, index, row_length, imglist_len, imglist):
+    images = []
+    for i in range(1, row_length):
+        if index < imglist_len:
+            images.append(cv2.imread(imglist[index].image.path))
+            index += 1
+        else:
+            break
+
+    big_img.append(cv2.hconcat(images))
 
 
 def gen_img(imglist, start):
@@ -27,31 +40,33 @@ def gen_img(imglist, start):
 
     big_img = []
     index = 0
-    for i in range(row_len):
-        row_img = []
-        for j in range(row_len):
-            # if we iterated through the images
-            # we can send back the generated image
-            if index == imglist_len:
-                big_img.append(cv2.hconcat(row_img))
-                blank = np.zeros(shape=[50, big_img[0].shape[1] - big_img[len(big_img)-1].shape[1], 3], dtype=np.uint8)
-                big_img[len(big_img)-1] = cv2.hconcat([big_img[len(big_img)-1], blank])
-                big_output = cv2.vconcat(big_img)
-                res = HttpResponse(content_type="image/jpeg")
-                cv2.imwrite('big.jpg', big_output)
-                big = Image.open('big.jpg')
-                big.save(res, 'JPEG')
-                os.remove('big.jpg')
-                # -------
-                stop = timeit.default_timer()
-                print('Time: ', stop - start)
-                # -------
-                return res
-            
-            row_img.append(cv2.imread(imglist[index].image.path))
-            index += 1
-        
-        big_img.append(cv2.hconcat(row_img))
+    # creating thread 
+    threads = []
+    for i in range(row_len-1):
+        threads.append(threading.Thread(target=multithread_imggen, args=(big_img, i*row_len, row_len, imglist_len, imglist)))
+
+    for i in range(row_len-1):
+        threads[i].start()
+
+    for i in range(row_len-1):
+        # waiting the threads to finish
+        threads[i].join()
+
+    multithread_imggen(big_img, (row_len-1) * row_len, row_len, imglist_len, imglist)
+
+    blank = np.zeros(shape=[50, big_img[0].shape[1] - big_img[row_len-1].shape[1], 3], dtype=np.uint8)
+    big_img[row_len-1] = cv2.hconcat([big_img[row_len-1], blank])
+    output = cv2.vconcat(big_img)
+    cv2.imwrite('big.jpg', output)
+    res = HttpResponse(content_type="image/jpeg")
+    big = Image.open('big.jpg')
+    big.save(res, 'JPEG')
+    os.remove('big.jpg')
+    # -------
+    stop = timeit.default_timer()
+    print('Time: ', stop - start)
+    # -------
+    return res
 
 
 def big(request):
