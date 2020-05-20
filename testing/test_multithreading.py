@@ -13,9 +13,7 @@ def in_thread(num):
     print('{}. thread done'.format(num))
 
 
-row = []
-
-def multithread_imggen(index, row_length):
+def multithread_imggen(row, index, row_length):
     images = []
     for i in range(1, row_length):
         if index < imglist_len:
@@ -33,11 +31,12 @@ if __name__ == "__main__":
     file_list = os.listdir(folder)
     imglist_len = len(file_list)
     row_length = ceil(sqrt(imglist_len))
+    row = []
 
     # creating thread 
     threads = []
     for i in range(row_length-1):
-        threads.append(threading.Thread(target=multithread_imggen, args=(i*row_length, row_length,)))
+        threads.append(threading.Thread(target=multithread_imggen, args=(row, i*row_length, row_length,)))
 
     print('before')
     for i in range(row_length-1):
@@ -46,7 +45,7 @@ if __name__ == "__main__":
     for i in range(row_length-1):
         threads[i].join()
 
-    multithread_imggen((row_length-1) * row_length, row_length)
+    multithread_imggen(row, (row_length-1) * row_length, row_length)
 
     blank = np.zeros(shape=[50, row[0].shape[1] - row[len(row)-1].shape[1], 3], dtype=np.uint8)
     row[len(row)-1] = cv2.hconcat([row[len(row)-1], blank])
