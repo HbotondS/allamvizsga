@@ -29,22 +29,24 @@ def multithread_imggen(index, row_length):
 
 if __name__ == "__main__": 
     start = timeit.default_timer()
-    folder = 'images/twitter-small/40k/'
+    folder = 'images/twitter-small/1k/'
     file_list = os.listdir(folder)
     imglist_len = len(file_list)
     row_length = ceil(sqrt(imglist_len))
 
     # creating thread 
     threads = []
-    for i in range(row_length):
+    for i in range(row_length-1):
         threads.append(threading.Thread(target=multithread_imggen, args=(i*row_length, row_length,)))
 
     print('before')
-    for i in range(row_length):
+    for i in range(row_length-1):
         threads[i].start()
 
-    for i in range(row_length):
+    for i in range(row_length-1):
         threads[i].join()
+
+    multithread_imggen((row_length-1) * row_length, row_length)
 
     blank = np.zeros(shape=[50, row[0].shape[1] - row[len(row)-1].shape[1], 3], dtype=np.uint8)
     row[len(row)-1] = cv2.hconcat([row[len(row)-1], blank])
