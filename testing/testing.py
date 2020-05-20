@@ -1,7 +1,6 @@
 import numpy as np
 import cv2
 import timeit
-from PIL import Image
 import os
 from math import sqrt, ceil
 
