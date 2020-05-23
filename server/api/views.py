@@ -57,16 +57,14 @@ def gen_img(imglist, start):
     blank = np.zeros(shape=[50, big_img[0].shape[1] - big_img[row_len-1].shape[1], 3], dtype=np.uint8)
     big_img[row_len-1] = cv2.hconcat([big_img[row_len-1], blank])
     output = cv2.vconcat(big_img)
-    cv2.imwrite('big.jpg', output)
-    res = HttpResponse(content_type="image/jpeg")
-    big = Image.open('big.jpg')
-    big.save(res, 'JPEG')
-    os.remove('big.jpg')
+    cv2.imwrite('media/big.jpg', output)
+
+    big_img_data = BigImageData.objects.first()
     # -------
     stop = timeit.default_timer()
     print('Time: ', stop - start)
     # -------
-    return res
+    return HttpResponse(big_img_data.image.url)
 
 
 def big(request):

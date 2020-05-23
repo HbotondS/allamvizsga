@@ -26,8 +26,11 @@ function setup() {
 
     document.getElementById('loadBtn').onclick = () => {
         const t0 = performance.now();
-        loadImage(BACK_END_URL + '/big', img => {
-            this.img = img;
+        httpGet(BACK_END_URL + '/big', data => {
+            print(data)
+            loadImage(BACK_END_URL + data, img => {
+                this.img = img;
+            })
         })
         const t1 = performance.now();
         print(`Loading images images took: ${(t1 - t0)} milliseconds.`);
