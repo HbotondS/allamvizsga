@@ -105,11 +105,13 @@ function mouseClicked() {
 }
 
 function draw() {
-    background(0);
-    keyDown();
-    // camera(posX, posY, , posX, posY, 0, 0, 1, 0);
-    imageMode(CENTER);
-    if (this.img_loaded) {
-        image(this.img, posX, posY, zoom, zoom);
+    if (focused) {
+        background(0);
+        keyDown();
+        // camera(posX, posY, , posX, posY, 0, 0, 1, 0);
+        imageMode(CENTER);
+        if (this.img_loaded) {
+            image(this.img, posX, posY, zoom, zoom);
+        }
     }
 }
