@@ -22,6 +22,7 @@ const BACK_END_URL = 'http://127.0.0.1:8000';
 // load the images from the back-end
 function loadImages() {
     const t0 = performance.now();
+    document.getElementById('loading').style.visibility = 'visible';
     httpGet(BACK_END_URL + '/big', data => {
         loadImage(BACK_END_URL + data, img => {
             this.img = img;
@@ -29,6 +30,7 @@ function loadImages() {
 
             const t1 = performance.now();
             print(`Loading images images took: ${Number((t1 - t0) / 1000).toFixed(2)} seconds.`);
+            document.getElementById('loading').style.visibility = 'hidden';
         })
     })
 }
@@ -36,6 +38,7 @@ function loadImages() {
 // randomize the images
 function randomImages() {
     const t0 = performance.now();
+    document.getElementById('loading').style.visibility = 'visible';
     httpGet(BACK_END_URL + '/random', data => {
         loadImage(BACK_END_URL + data, img => {
             this.img = img;
@@ -43,6 +46,7 @@ function randomImages() {
 
             const t1 = performance.now();
             print(`Random order images took: ${Number((t1 - t0) / 1000).toFixed(2)} seconds.`);
+            document.getElementById('loading').style.visibility = 'hidden';
         })
     })
 }
@@ -50,6 +54,7 @@ function randomImages() {
 // sort the images in reverse order on the server
 function reverseImages() {
     const t0 = performance.now();
+    document.getElementById('loading').style.visibility = 'visible';
     httpGet(BACK_END_URL + '/reverse', data => {
         loadImage(BACK_END_URL + data, img => {
             this.img = img;
@@ -57,6 +62,7 @@ function reverseImages() {
 
             const t1 = performance.now();
             print(`Reverse order images took: ${Number((t1 - t0) / 1000).toFixed(2)} seconds.`);
+            document.getElementById('loading').style.visibility = 'hidden';
         })
     })
 }
@@ -64,6 +70,7 @@ function reverseImages() {
 // diplay the images on a histogram, grouped by dates
 function histogram() {
     const t0 = performance.now();
+    document.getElementById('loading').style.visibility = 'visible';
     httpGet(BACK_END_URL + '/histogram', data => {
         loadImage(BACK_END_URL + data, img => {
             this.img = img;
@@ -71,6 +78,7 @@ function histogram() {
 
             const t1 = performance.now();
             print(`Histogram images took: ${Number((t1 - t0) / 1000).toFixed(2)} seconds.`);
+            document.getElementById('loading').style.visibility = 'hidden';
         })
     })
 }
