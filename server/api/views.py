@@ -6,9 +6,9 @@ from .serializers import ImageSerializer, BigImageSerializer
 import random
 from PIL import Image
 from math import ceil, sqrt
+from .logging import log_info
 import timeit
 import cv2
-import os
 import numpy as np
 import threading
 
@@ -62,12 +62,13 @@ def gen_img(imglist, start):
     big_img_data = BigImageData.objects.first()
     # -------
     stop = timeit.default_timer()
-    print('Time: ', stop - start)
+    print('Load time: {0:.3}s'.format(stop - start))
     # -------
     return HttpResponse(big_img_data.image.url)
 
 
 def big(request):
+    log_info('big images')
     start = timeit.default_timer()
     imglist = list(ImageData.objects.all())
     print(len(imglist))
@@ -75,13 +76,15 @@ def big(request):
 
 
 def reverseImages(request):
+    log_info('reverse images')
     start = timeit.default_timer()
     imglist = list(ImageData.objects.all())
     imglist = imglist[::-1]
     return gen_img(imglist, start)
 
 
-def randomImages(request):    
+def randomImages(request):
+    log_info('random images') 
     start = timeit.default_timer()
     imglist = list(ImageData.objects.all())
     random.shuffle(imglist)
@@ -95,7 +98,7 @@ def GetMaxFlow(dict):
 
 
 def histogram(request):
-    # print('test logging')
+    log_info('histogram')
     # group images by date
     start = timeit.default_timer()
     img_dict = {}
@@ -124,7 +127,7 @@ def histogram(request):
     big_img.save(res, "JPEG")
     # -------
     stop = timeit.default_timer()
-    print('Time: ', stop - start)
+    print('Load time: {0:.3}s'.format(stop - start))
     # -------
     return res
 
