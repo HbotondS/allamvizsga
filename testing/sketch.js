@@ -1,5 +1,9 @@
 function mouseClicked() {
-    print(mouseX - 250)
+    if (mouseX > width || mouseY > height || mouseX < 0 || mouseY < 0) {
+        print('out')
+    } else {
+        print(mouseX - 250)
+    }
 }
 
 let zoom = 100;

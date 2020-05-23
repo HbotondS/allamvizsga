@@ -119,6 +119,9 @@ function keyDown() {
 }
 
 function mouseClicked() {
+    if (mouseX > width || mouseY > height || mouseX < 0 || mouseY < 0) {
+        return;
+    }
     if (this.img_loaded) {
         if ((mouseX - myWindowWidth / 2) < zoom / 2 + posX && mouseX - myWindowWidth / 2 > -zoom / 2 + posX
             && (mouseY - myWindowHeight / 2) < zoom / 2 + posY && (mouseY - myWindowHeight / 2) > -zoom / 2 + posY) {
