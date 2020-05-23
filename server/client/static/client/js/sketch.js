@@ -10,11 +10,12 @@ let canvasSize = Math.round(Math.sqrt(1000)) * 50;
 let myWindowWidth;
 let myWindowHeight;
 
-let zoom = 1000;
+let zoom = 500;
 let posX = 0;
 let posY = 0;
 
 let img;
+let img_loaded = false;
 
 const BACK_END_URL = 'http://127.0.0.1:8000';
 
@@ -27,9 +28,9 @@ function setup() {
     document.getElementById('loadBtn').onclick = () => {
         const t0 = performance.now();
         httpGet(BACK_END_URL + '/big', data => {
-            print(data)
             loadImage(BACK_END_URL + data, img => {
                 this.img = img;
+                this.img_loaded = true;
             })
         })
         const t1 = performance.now();
@@ -93,12 +94,22 @@ function keyDown() {
     }
 }
 
+function mouseClicked() {
+    if (this.img_loaded) {
+        if ((mouseX - myWindowWidth/2) < zoom/2 + posX && mouseX - myWindowWidth/2 > -zoom/2 + posX
+            && (mouseY - myWindowHeight/2) < zoom/2 + posY && (mouseY - myWindowHeight/2) > -zoom/2 + posY) {
+                print('clicked on image')
+                print(mouseX - myWindowWidth/2, mouseY - myWindowHeight/2)
+        }
+    }
+}
+
 function draw() {
     background(0);
     keyDown();
-    camera(posX, posY, zoom*2, posX, posY, 0, 0, 1, 0);
+    // camera(posX, posY, , posX, posY, 0, 0, 1, 0);
     imageMode(CENTER);
-    if (this.img !== undefined) {
-        image(this.img, 0, 0);
+    if (this.img_loaded) {
+        image(this.img, posX, posY, zoom, zoom);
     }
 }

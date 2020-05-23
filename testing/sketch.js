@@ -3,6 +3,9 @@ function mouseClicked() {
 }
 
 let zoom = 100;
+let posX = 0;
+let posY = 0;
+let speed = 10;
 
 const MIN_ZOOM = 100;
 const MAX_ZOOM = 300;
@@ -21,16 +24,34 @@ function setup() {
     createCanvas(500, 500, WEBGL);
 }
 
+function keyDown() {
+    if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) {
+        posX -= speed;
+    }
+
+    if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) {
+        posX += speed;
+    }
+
+    if (keyIsDown(UP_ARROW) || keyIsDown(87)) {
+        posY -= speed;
+    }
+
+    if (keyIsDown(DOWN_ARROW) || keyIsDown(83)) {
+        posY += speed;
+    }
+}
+
 function draw() {
     // camera(0, 0, zoom, 0, 0, 0, 0, 1, 0);
     background(0);
-    let corner = 105;
-    if ((mouseX - 250) < zoom/2 && mouseX - 250 > -zoom/2
-        && (mouseY - 250) < zoom/2 && (mouseY - 250) > -zoom/2) {
+    keyDown()
+    if ((mouseX - 250) < zoom/2 + posX && mouseX - 250 > -zoom/2 + posX
+        && (mouseY - 250) < zoom/2 + posY && (mouseY - 250) > -zoom/2 + posY) {
         fill(102, 255, 50)
     } else {
         fill(255, 102, 80)
     }
     rectMode(CENTER);
-    rect(0, 0, zoom, zoom)
+    rect(posX, posY, zoom, zoom)
 }
