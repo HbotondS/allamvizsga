@@ -1,11 +1,3 @@
-function mouseClicked() {
-    if (mouseX > width || mouseY > height || mouseX < 0 || mouseY < 0) {
-        print('out')
-    } else {
-        print(mouseX - 250)
-    }
-}
-
 let zoom = 100;
 let posX = 0;
 let posY = 0;
@@ -14,8 +6,18 @@ let speed = 10;
 const MIN_ZOOM = 100;
 const MAX_ZOOM = 300;
 
+function mouseClicked() {
+    if (mouseX > width || mouseY > height || mouseX < 0 || mouseY < 0) {
+        print('out')
+    } else {
+        print('X: ', mouseX - 250 - posX + zoom/2)
+        print('Y: ', mouseY - 250 - posY + zoom/2)
+    }
+}
+
+
 function mouseWheel(event) {
-    const zoomSpeed = 20;
+    const zoomSpeed = 20;   
     if (event.delta < 0 && zoom > MIN_ZOOM) {
         zoom -= zoomSpeed;
     }
