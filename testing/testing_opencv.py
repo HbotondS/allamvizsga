@@ -70,6 +70,18 @@ def testing_concat():
     cv2.destroyAllWindows()
 
 
+def testing_overlay():
+    img1 = cv2.imread('images/test.png')
+    img2 = cv2.imread('images/single-images/1k/1.jpg')
+    # insert to the bottom
+    img1[img1.shape[0]-img2.shape[0]:img1.shape[0], 0:0+img2.shape[1]] = img2
+    
+    cv2.imshow('test', img1)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+
 # resize()
 # list_files()
-big()
+# big()
+testing_overlay()
