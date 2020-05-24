@@ -17,6 +17,29 @@ let img_loaded = false;
 
 const BACK_END_URL = 'http://127.0.0.1:8000';
 
+/**
+ * @param {p5.Image} rowImg - row from the big image 
+ * @param {int} rowNr - row from the big image 
+ * @param {int} length - of the row
+ */
+function splitRowImage(rowImg, rowNr, length) {
+    for (let i = 0; i < length; i++) {
+        const img = rowImg.get(50*i, 0, 50, 50);
+    }
+}
+
+/**
+ * @param {p5.Image} bigImg - the image we want to split 
+ */
+function splitImage(bigImg) {
+    const numberOfRows = bigImg.width / 50;
+    for (let i = 0; i < numberOfRows; i++) {
+        const rowImg = bigImg.get(0, 50*i, 50, 50*numberOfRows);
+        setTimeout(() => splitRowImage(rowImg, i, numberOfRows), 0);
+        // print(rowImg.width, rowImg.height)
+    }
+}
+
 // load the images from the back-end
 function loadImages() {
     const t0 = performance.now();
@@ -25,6 +48,7 @@ function loadImages() {
         loadImage(BACK_END_URL + data, img => {
             this.img = img;
             this.img_loaded = true;
+            setTimeout(() => splitImage(img), 0);
 
             const t1 = performance.now();
             print(`Loading images images took: ${Number((t1 - t0) / 1000).toFixed(2)} seconds.`);
