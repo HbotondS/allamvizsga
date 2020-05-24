@@ -5,8 +5,6 @@
 
 let imageDatas = [];
 
-let canvasSize = Math.round(Math.sqrt(1000)) * 50;
-
 let myWindowWidth;
 let myWindowHeight;
 
@@ -84,7 +82,6 @@ function histogram() {
 }
 
 function setup() {
-    zoom = canvasSize;
     myWindowWidth = windowWidth * 80 / 100;
     myWindowHeight = windowHeight - 50;
     createCanvas(myWindowWidth, myWindowHeight, WEBGL);
@@ -93,28 +90,28 @@ function setup() {
 function mouseWheel(event) {
     const zoomSpeed = 20;
     if (event.delta < 0) {
-        zoom -= zoomSpeed;
+        zoom += zoomSpeed;
     }
     if (event.delta > 0) {
-        zoom += zoomSpeed;
+        zoom -= zoomSpeed;
     }
 }
 
 function keyDown() {
     if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) {
-        posX += 50;
-    }
-
-    if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) {
         posX -= 50;
     }
 
+    if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) {
+        posX += 50;
+    }
+
     if (keyIsDown(UP_ARROW) || keyIsDown(87)) {
-        posY += 50;
+        posY -= 50;
     }
 
     if (keyIsDown(DOWN_ARROW) || keyIsDown(83)) {
-        posY -= 50;
+        posY += 50;
     }
 }
 
