@@ -110,26 +110,28 @@ def histogram(request):
             img_dict[img_data.date] = [img_data.image]
     
     height = GetMaxFlow(img_dict)
-    big_img = Image.new('RGB', (IMAGE_SIZE*len(img_dict), IMAGE_SIZE*height))
+    big_img = []
     x_offset = 0
     for i in img_dict:
         y_offset = 0
-        column_img = Image.new('RGB', (IMAGE_SIZE, IMAGE_SIZE*height))
+        column_img = np.zeros(shape=[height * 50, 50, 3], dtype=np.uint8)
         for j in img_dict[i]:
-            img = Image.open(j)
-            column_img.paste(img, (0, y_offset))
-            y_offset += img.size[1]
+            img = cv2.imread(j.path)
+            column_img[column_img.shape[0]-(y_offset+1)*img.shape[0] : column_img.shape[0] - y_offset * img.shape[0],
+                        0:column_img.shape[1]] = img
+            y_offset += 1
         
-        big_img.paste(column_img, (x_offset, IMAGE_SIZE*(height - len(img_dict[i]))))
-        x_offset += column_img.size[0]
+        big_img.append(column_img)
 
-    res = HttpResponse(content_type="image/jpeg")
-    big_img.save(res, "JPEG")
+    output = cv2.hconcat(big_img)
+    cv2.imwrite('media/hist.jpg', output)
+
+    big_img_data = BigImageData.objects.last()
     # -------
     stop = timeit.default_timer()
     print('Load time: {0:.3}s'.format(stop - start))
     # -------
-    return res
+    return HttpResponse(big_img_data.image.url)
 
 
 class BigImageViewSet(viewsets.ModelViewSet):
