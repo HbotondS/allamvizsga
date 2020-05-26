@@ -5,8 +5,10 @@
 
 let imageDatas = [];
 
-let myWindowWidth;
-let myWindowHeight;
+let canvasWidth;
+let canvasHeight;
+let halfCanvasWidth;
+let halfCanvasHeight;
 
 let zoom = 500;
 let posX = 0;
@@ -25,6 +27,12 @@ const BACK_END_URL = 'http://127.0.0.1:8000';
 function splitRowImage(rowImg, rowNr, length) {
     for (let i = 0; i < length; i++) {
         const img = rowImg.get(50*i, 0, 50, 50);
+        imageDatas.push(new ImageData(
+            Math.floor((Math.random() * 10000)),
+            null,
+            img,
+            {x: 50*i, y: 50*rowNr}
+        ));
     }
 }
 
@@ -34,9 +42,9 @@ function splitRowImage(rowImg, rowNr, length) {
 function splitImage(bigImg) {
     const numberOfRows = bigImg.width / 50;
     for (let i = 0; i < numberOfRows; i++) {
-        const rowImg = bigImg.get(0, 50*i, 50, 50*numberOfRows);
+        // get a row from the big image
+        const rowImg = bigImg.get(0, 50*i, bigImg.width, 50);
         setTimeout(() => splitRowImage(rowImg, i, numberOfRows), 0);
-        // print(rowImg.width, rowImg.height)
     }
 }
 
@@ -74,7 +82,7 @@ function randomImages() {
 }
 
 // sort the images in reverse order on the server
-function reverseImages() {
+function reverseImages() { 
     const t0 = performance.now();
     document.getElementById('loading').style.visibility = 'visible';
     httpGet(BACK_END_URL + '/reverse', data => {
@@ -106,9 +114,11 @@ function histogram() {
 }
 
 function setup() {
-    myWindowWidth = windowWidth * 80 / 100;
-    myWindowHeight = windowHeight - 50;
-    createCanvas(myWindowWidth, myWindowHeight, WEBGL);
+    canvasWidth = windowWidth * 80 / 100;
+    canvasHeight = windowHeight - 50;
+    halfCanvasWidth = canvasWidth / 2;
+    halfCanvasHeight = canvasHeight / 2;
+    createCanvas(canvasWidth, canvasHeight, WEBGL);
 }
 
 function mouseWheel(event) {
@@ -144,10 +154,21 @@ function mouseClicked() {
         return;
     }
     if (this.img_loaded) {
-        if ((mouseX - myWindowWidth / 2) < zoom / 2 + posX && mouseX - myWindowWidth / 2 > -zoom / 2 + posX
-            && (mouseY - myWindowHeight / 2) < zoom / 2 + posY && (mouseY - myWindowHeight / 2) > -zoom / 2 + posY) {
-            print('clicked on image')
-            print(mouseX - myWindowWidth / 2, mouseY - myWindowHeight / 2)
+        const halfZoom = zoom / 2;
+        if ((mouseX - halfCanvasWidth) < halfZoom + posX && (mouseX - halfCanvasWidth) > -halfZoom + posX
+            && (mouseY - halfCanvasHeight) < halfZoom + posY && (mouseY - halfCanvasHeight) > -halfZoom + posY) {
+            const mouseXinPic = mouseX - halfCanvasWidth - posX + halfZoom
+            const mouseYinPic = mouseY - halfCanvasHeight - posY + halfZoom
+            // print(mouseXinPic, mouseYinPic)
+            const smallImgDim = 50 * zoom / this.img.width
+            imageDatas.forEach(imageData => {
+                const imgX = imageData.pos.x * zoom / this.img.width
+                const imgY = imageData.pos.y * zoom / this.img.width
+                if (mouseXinPic > imgX && mouseXinPic <= imgX + smallImgDim
+                    && mouseYinPic > imgY && mouseYinPic <= imgY + smallImgDim) {
+                        imageData.image.save(imageData.id.toString(), 'jpg')
+                    }
+            });
         }
     }
 }
