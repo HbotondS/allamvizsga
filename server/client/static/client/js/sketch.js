@@ -16,6 +16,7 @@ let posY = 0;
 
 let img;
 let img_loaded = false;
+let spinner;
 
 const BACK_END_URL = 'http://127.0.0.1:8000';
 
@@ -51,7 +52,7 @@ function splitImage(bigImg) {
 // load the images from the back-end
 function loadImages() {
     const t0 = performance.now();
-    document.getElementById('loading').style.visibility = 'visible';
+    this.spinner.showSpinner();
     const size = document.getElementById('sizes').value;
     httpGet(BACK_END_URL + `/big?size=${size}`, data => {
         loadImage(BACK_END_URL + data, img => {
@@ -61,7 +62,7 @@ function loadImages() {
 
             const t1 = performance.now();
             print(`Loading images images took: ${Number((t1 - t0) / 1000).toFixed(2)} seconds.`);
-            document.getElementById('loading').style.visibility = 'hidden';
+            this.spinner.hideSpinner();
         })
     })
 }
@@ -69,7 +70,7 @@ function loadImages() {
 // randomize the images
 function randomImages() {
     const t0 = performance.now();
-    document.getElementById('loading').style.visibility = 'visible';
+    this.spinner.showSpinner();
     httpGet(BACK_END_URL + '/random', data => {
         loadImage(BACK_END_URL + data, img => {
             this.img = img;
@@ -77,7 +78,7 @@ function randomImages() {
 
             const t1 = performance.now();
             print(`Random order images took: ${Number((t1 - t0) / 1000).toFixed(2)} seconds.`);
-            document.getElementById('loading').style.visibility = 'hidden';
+            this.spinner.hideSpinner();
         })
     })
 }
@@ -85,7 +86,7 @@ function randomImages() {
 // sort the images in reverse order on the server
 function reverseImages() { 
     const t0 = performance.now();
-    document.getElementById('loading').style.visibility = 'visible';
+    this.spinner.showSpinner();
     httpGet(BACK_END_URL + '/reverse', data => {
         loadImage(BACK_END_URL + data, img => {
             this.img = img;
@@ -93,7 +94,7 @@ function reverseImages() {
 
             const t1 = performance.now();
             print(`Reverse order images took: ${Number((t1 - t0) / 1000).toFixed(2)} seconds.`);
-            document.getElementById('loading').style.visibility = 'hidden';
+            this.spinner.hideSpinner();
         })
     })
 }
@@ -101,7 +102,7 @@ function reverseImages() {
 // diplay the images on a histogram, grouped by dates
 function histogram() {
     const t0 = performance.now();
-    document.getElementById('loading').style.visibility = 'visible';
+    this.spinner.showSpinner();
     httpGet(BACK_END_URL + '/histogram', data => {
         loadImage(BACK_END_URL + data, img => {
             this.img = img;
@@ -109,7 +110,7 @@ function histogram() {
 
             const t1 = performance.now();
             print(`Histogram images took: ${Number((t1 - t0) / 1000).toFixed(2)} seconds.`);
-            document.getElementById('loading').style.visibility = 'hidden';
+            this.spinner.hideSpinner();
         })
     })
 }
@@ -120,6 +121,8 @@ function setup() {
     halfCanvasWidth = canvasWidth / 2;
     halfCanvasHeight = canvasHeight / 2;
     createCanvas(canvasWidth, canvasHeight, WEBGL);
+
+    this.spinner = new SpinnerService()
 }
 
 function mouseWheel(event) {
@@ -183,5 +186,6 @@ function draw() {
         if (this.img_loaded) {
             image(this.img, posX, posY, zoom, zoom);
         }
+        this.spinner.draw();
     }
 }

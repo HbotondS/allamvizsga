@@ -9,6 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.js"></script>
     <script src="{% static 'client/js/sketch.js' %}"></script>
     <script src="{% static 'client/js/ImageService.js' %}"></script>
+    <script src="{% static 'client/js/SpinnerService.js' %}"></script>
     <script src="{% static 'client/js/ImageData.js' %}"></script>
     <script src="{% static 'client/js/util.js' %}"></script>
 </head>
@@ -28,9 +29,6 @@
         <button id="rndBtn" onclick="randomImages()">Random</button>
         <button id="revBtn" onclick="reverseImages()">Reverse</button>
         <button id="histBtn" onclick="histogram()">Histogram</button>
-        <div>
-            <p id="loading" style="visibility: hidden">Loading...</p>
-        </div>
     </div>
 </body>
 </html>
