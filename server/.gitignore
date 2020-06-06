@@ -4,18 +4,8 @@ venv/
 
 .vscode/
 
-server/.vscode/
-
-server/__pycache__/
-
-server/quickstart/__pycache__/
-
-api/__pycache__/
+__pycache__/
 
 media/
 
-api/migrations
-
-client/__pycache__/
-
-client/migrations
+migrations/
