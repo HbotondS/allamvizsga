@@ -26,7 +26,6 @@ class BigImageData(models.Model):
 from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
 
-@receiver(pre_delete, sender=ImageData)
 @receiver(pre_delete, sender=BigImageData)
 def mymodel_delete(sender, instance, **kwargs):
     # Pass false so FileField doesn't save the model.

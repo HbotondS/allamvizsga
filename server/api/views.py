@@ -4,13 +4,12 @@ from django.http import HttpRequest, HttpResponse, JsonResponse
 from .models import ImageData, BigImageData
 from .serializers import ImageSerializer, BigImageSerializer
 import random
-from PIL import Image
 from math import ceil, sqrt
 from .utils import logging as log
-import timeit
+from .utils import util
 import cv2
-import numpy as np
 import threading
+import os
 
 
 IMAGE_SIZE = 50
@@ -54,14 +53,14 @@ def gen_img(imglist, start):
 
     multithread_imggen(big_img, (row_len-1) * row_len, row_len, imglist_len, imglist)
 
-    blank = np.zeros(shape=[50, big_img[0].shape[1] - big_img[row_len-1].shape[1], 3], dtype=np.uint8)
+    blank = util.blank_image(shape=[50, big_img[0].shape[1] - big_img[row_len-1].shape[1], 3])
     big_img[row_len-1] = cv2.hconcat([big_img[row_len-1], blank])
     output = cv2.vconcat(big_img)
     cv2.imwrite('media/big.jpg', output)
 
     big_img_data = BigImageData.objects.first()
     # -------
-    stop = timeit.default_timer()
+    stop = util.get_time()
     print('Load time: {0:.3}s'.format(stop - start))
     # -------
     return HttpResponse(big_img_data.image.url)
@@ -70,7 +69,7 @@ def gen_img(imglist, start):
 def big(request):
     log.info('big images')
     log.info('params size: {}'.format(request.GET['size']))
-    start = timeit.default_timer()
+    start = util.get_time()
     imglist = list(ImageData.objects.all())
     print(len(imglist))
     return gen_img(imglist, start)
@@ -78,7 +77,7 @@ def big(request):
 
 def reverseImages(request):
     log.info('reverse images')
-    start = timeit.default_timer()
+    start = util.get_time()
     imglist = list(ImageData.objects.all())
     imglist = imglist[::-1]
     return gen_img(imglist, start)
@@ -86,7 +85,7 @@ def reverseImages(request):
 
 def randomImages(request):
     log.info('random images') 
-    start = timeit.default_timer()
+    start = util.get_time()
     imglist = list(ImageData.objects.all())
     random.shuffle(imglist)
     return gen_img(imglist, start)
@@ -101,7 +100,7 @@ def GetMaxFlow(dict):
 def histogram(request):
     log.info('histogram')
     # group images by date
-    start = timeit.default_timer()
+    start = util.get_time()
     img_dict = {}
     imglist = list(ImageData.objects.all())
     for img_data in imglist:
@@ -115,7 +114,7 @@ def histogram(request):
     x_offset = 0
     for i in img_dict:
         y_offset = 0
-        column_img = np.zeros(shape=[height * 50, 50, 3], dtype=np.uint8)
+        column_img = util.blank_image(shape=[height * 50, 50, 3])
         for j in img_dict[i]:
             img = cv2.imread(j.path)
             column_img[column_img.shape[0]-(y_offset+1)*img.shape[0] : column_img.shape[0] - y_offset * img.shape[0],
@@ -129,10 +128,34 @@ def histogram(request):
 
     big_img_data = BigImageData.objects.last()
     # -------
-    stop = timeit.default_timer()
+    stop = util.get_time()
     print('Load time: {0:.3}s'.format(stop - start))
     # -------
     return HttpResponse(big_img_data.image.url)
+
+
+# load images from folder into the database
+def load_images(request):
+    start = util.get_time()
+
+    data = util.process_json('media/ImageDataset.TwitterFDL2015.json')
+
+    folder = 'media/images/Twitter_2015_Imgs/'
+    for filename in os.listdir(folder):
+        img_id = filename[0:len(filename)-6]
+
+        img_data = ImageData()
+        img_data._id = img_id
+        img_data.image = folder + filename
+        img_data.index = 'media/images/index' + filename
+        try:
+            img_data.date = util.convert_timestamp2date(data[img_id]['timestamp_ms'])
+
+            img_data.save()
+        except Exception as e:
+            log.error('{} now found in JSON'.format(img_id))
+
+    return HttpResponse("Import done!")
 
 
 class BigImageViewSet(viewsets.ModelViewSet):

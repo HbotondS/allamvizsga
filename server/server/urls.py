@@ -20,7 +20,7 @@ from server.quickstart import views
 
 from django.conf import settings
 from django.conf.urls.static import static
-from api.views import ImageViewSet, RandomImages, big, BigImageViewSet, randomImages, histogram, reverseImages
+from api.views import ImageViewSet, RandomImages, big, BigImageViewSet, randomImages, histogram, reverseImages, load_images
 
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
@@ -30,6 +30,7 @@ router.register(r'bigimages', BigImageViewSet)
 
 
 urlpatterns = [
+    path('import_images', load_images),
     path('big/', big),
     path('random/', randomImages),
     path('reverse/', reverseImages),
