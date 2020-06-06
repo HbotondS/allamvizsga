@@ -1,3 +1,4 @@
+from django.utils.timezone import make_aware
 from datetime import datetime
 import time
 import json
@@ -14,7 +15,8 @@ def blank_image(shape):
 
 def convert_timestamp2date(timestamp):
     gmtime = time.gmtime(int(timestamp) / 1000.)
-    return datetime(gmtime.tm_year, gmtime.tm_mon, gmtime.tm_mday, gmtime.tm_hour, gmtime.tm_min)
+    date = datetime(gmtime.tm_year, gmtime.tm_mon, gmtime.tm_mday, gmtime.tm_hour, gmtime.tm_min, gmtime.tm_sec)
+    return make_aware(date)
 
 
 def process_json(file_name):

@@ -23,7 +23,7 @@ def multithread_imggen(big_img, index, row_length, imglist_len, imglist):
     images = []
     for i in range(1, row_length):
         if index < imglist_len:
-            images.append(cv2.imread(imglist[index].image.path))
+            images.append(cv2.imread(imglist[index].index))
             index += 1
         else:
             break
@@ -68,10 +68,12 @@ def gen_img(imglist, start):
 
 def big(request):
     log.info('big images')
-    log.info('params size: {}'.format(request.GET['size']))
     start = util.get_time()
     imglist = list(ImageData.objects.all())
-    print(len(imglist))
+    # get request parameter named size
+    # default value is the length of the list
+    size = int(request.GET.get('size', len(imglist)))
+    imglist = imglist[:size]
     return gen_img(imglist, start)
 
 
@@ -105,9 +107,9 @@ def histogram(request):
     imglist = list(ImageData.objects.all())
     for img_data in imglist:
         if img_data.date in img_dict:
-            img_dict[img_data.date].append(img_data.image)
+            img_dict[img_data.date].append(img_data.index)
         else:
-            img_dict[img_data.date] = [img_data.image]
+            img_dict[img_data.date] = [img_data.index]
     
     height = GetMaxFlow(img_dict)
     big_img = []
@@ -115,8 +117,8 @@ def histogram(request):
     for i in img_dict:
         y_offset = 0
         column_img = util.blank_image(shape=[height * 50, 50, 3])
-        for j in img_dict[i]:
-            img = cv2.imread(j.path)
+        for img_path in img_dict[i]:
+            img = cv2.imread(img_path)
             column_img[column_img.shape[0]-(y_offset+1)*img.shape[0] : column_img.shape[0] - y_offset * img.shape[0],
                         0:column_img.shape[1]] = img
             y_offset += 1
@@ -139,6 +141,7 @@ def load_images(request):
     start = util.get_time()
 
     data = util.process_json('media/ImageDataset.TwitterFDL2015.json')
+    error_counter = 0
 
     folder = 'media/images/Twitter_2015_Imgs/'
     for filename in os.listdir(folder):
@@ -147,14 +150,16 @@ def load_images(request):
         img_data = ImageData()
         img_data._id = img_id
         img_data.image = folder + filename
-        img_data.index = 'media/images/index' + filename
+        img_data.index = 'media/images/index/' + filename
         try:
             img_data.date = util.convert_timestamp2date(data[img_id]['timestamp_ms'])
 
             img_data.save()
         except Exception as e:
             log.error('{} now found in JSON'.format(img_id))
+            error_counter += 1
 
+    log.error('number of errors: {}'.format(error_counter))
     return HttpResponse("Import done!")
 
 
