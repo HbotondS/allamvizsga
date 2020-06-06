@@ -146,8 +146,9 @@ class ImageViewSet(viewsets.ModelViewSet):
 
     def post(self, request, *args, **kwargs):
         image = request.data['image']
+        index = request.data['index']
         date = request.data['date']
-        ImageData.objects.create(name=name, image=image, date=date)
+        ImageData.objects.create(name=name, image=image, date=date, index=index)
         # merge_images(imageData, request.data['image'])
         return HttpRequest({'message': 'Image created'}, status=200)
 

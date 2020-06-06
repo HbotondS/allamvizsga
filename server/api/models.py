@@ -15,7 +15,8 @@ def random_id():
 class ImageData(models.Model):
     _id = models.CharField(max_length=256, default=random_id)
     date = models.DateField(null=False)
-    image = models.ImageField(blank=False, null=False, upload_to=upload_path)
+    image = models.CharField(max_length=256, null=False, default='')
+    index = models.CharField(max_length=256, null=False, default='')
 
 
 class BigImageData(models.Model):
