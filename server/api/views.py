@@ -6,7 +6,7 @@ from .serializers import ImageSerializer, BigImageSerializer
 import random
 from PIL import Image
 from math import ceil, sqrt
-from .logging import log_info
+from .utils import logging as log
 import timeit
 import cv2
 import numpy as np
@@ -68,8 +68,8 @@ def gen_img(imglist, start):
 
 
 def big(request):
-    log_info('big images')
-    log_info('params size: {}'.format(request.GET['size']))
+    log.info('big images')
+    log.info('params size: {}'.format(request.GET['size']))
     start = timeit.default_timer()
     imglist = list(ImageData.objects.all())
     print(len(imglist))
@@ -77,7 +77,7 @@ def big(request):
 
 
 def reverseImages(request):
-    log_info('reverse images')
+    log.info('reverse images')
     start = timeit.default_timer()
     imglist = list(ImageData.objects.all())
     imglist = imglist[::-1]
@@ -85,7 +85,7 @@ def reverseImages(request):
 
 
 def randomImages(request):
-    log_info('random images') 
+    log.info('random images') 
     start = timeit.default_timer()
     imglist = list(ImageData.objects.all())
     random.shuffle(imglist)
@@ -99,7 +99,7 @@ def GetMaxFlow(dict):
 
 
 def histogram(request):
-    log_info('histogram')
+    log.info('histogram')
     # group images by date
     start = timeit.default_timer()
     img_dict = {}
