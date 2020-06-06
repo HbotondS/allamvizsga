@@ -14,11 +14,20 @@
 </head>
 <body>
     <div style="float: right; width: 10%; ">
+        <div>
+            <label for="size">Number of images:</label>
+
+            <select name="size" id="sizes">
+                <option value="1000">1k</option>
+                <option value="10000">10k</option>
+                <option value="20000">20k</option>
+                <option value="40000">40k</option>
+            </select>
+        </div>
         <button id="loadBtn" onclick="loadImages()">Load</button>
         <button id="rndBtn" onclick="randomImages()">Random</button>
         <button id="revBtn" onclick="reverseImages()">Reverse</button>
         <button id="histBtn" onclick="histogram()">Histogram</button>
-        <div>
         <div>
             <p id="loading" style="visibility: hidden">Loading...</p>
         </div>

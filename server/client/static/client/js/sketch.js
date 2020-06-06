@@ -52,7 +52,8 @@ function splitImage(bigImg) {
 function loadImages() {
     const t0 = performance.now();
     document.getElementById('loading').style.visibility = 'visible';
-    httpGet(BACK_END_URL + '/big', data => {
+    const size = document.getElementById('sizes').value;
+    httpGet(BACK_END_URL + `/big?size=${size}`, data => {
         loadImage(BACK_END_URL + data, img => {
             this.img = img;
             this.img_loaded = true;
