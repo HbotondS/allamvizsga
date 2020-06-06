@@ -69,6 +69,7 @@ def gen_img(imglist, start):
 
 def big(request):
     log_info('big images')
+    log_info('params size: {}'.format(request.GET['size']))
     start = timeit.default_timer()
     imglist = list(ImageData.objects.all())
     print(len(imglist))
