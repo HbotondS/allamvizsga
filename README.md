@@ -1,4 +1,4 @@
-# Nagy képkollekciok online megjelenitése
+# Nagy képkollekciók online megjelenitése
 
 The README is also available in english [here](README_EN.md).
 
