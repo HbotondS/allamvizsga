@@ -20,7 +20,7 @@ from server.quickstart import views
 
 from django.conf import settings
 from django.conf.urls.static import static
-from api.views import ImageViewSet, RandomImages, big, BigImageViewSet, randomImages, histogram, reverseImages, load_images
+from api.views import ImageViewSet, BigImageViewSet
 
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
@@ -30,15 +30,9 @@ router.register(r'bigimages', BigImageViewSet)
 
 
 urlpatterns = [
-    path('import_images', load_images),
-    path('big/', big),
-    path('random/', randomImages),
-    path('reverse/', reverseImages),
-    path('histogram/', histogram),
     path('', include(router.urls)),
     path('api/', include('api.urls')),
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path(r'randomimages', RandomImages),
     path('index', include('client.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

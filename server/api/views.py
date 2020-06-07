@@ -189,12 +189,3 @@ class ImageViewSet(viewsets.ModelViewSet):
         serializer = ImageSerializer(queryset, many=True)
         # todo: merge images into rows
         return Response(serializer.data)
-
-
-def RandomImages(request):
-    ids = list(ImageData.objects.all().values_list('_id', flat=True))
-    l = []
-    for i in range(len(ids)):
-        l = l + (ids[i].split(','))
-    random.shuffle(l)
-    return JsonResponse({'data': l})

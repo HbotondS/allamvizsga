@@ -54,7 +54,7 @@ function loadImages() {
     const t0 = performance.now();
     this.spinner.showSpinner();
     const size = document.getElementById('sizes').value;
-    httpGet(BACK_END_URL + `/big?size=${size}`, data => {
+    httpGet(BACK_END_URL + `/api/big?size=${size}`, data => {
         loadImage(BACK_END_URL + data, img => {
             this.img = img;
             this.img_loaded = true;
@@ -71,7 +71,7 @@ function loadImages() {
 function randomImages() {
     const t0 = performance.now();
     this.spinner.showSpinner();
-    httpGet(BACK_END_URL + '/random', data => {
+    httpGet(BACK_END_URL + '/api/random', data => {
         loadImage(BACK_END_URL + data, img => {
             this.img = img;
             this.img_loaded = true;
@@ -87,7 +87,7 @@ function randomImages() {
 function reverseImages() { 
     const t0 = performance.now();
     this.spinner.showSpinner();
-    httpGet(BACK_END_URL + '/reverse', data => {
+    httpGet(BACK_END_URL + '/api/reverse', data => {
         loadImage(BACK_END_URL + data, img => {
             this.img = img;
             this.img_loaded = true;
@@ -103,7 +103,7 @@ function reverseImages() {
 function histogram() {
     const t0 = performance.now();
     this.spinner.showSpinner();
-    httpGet(BACK_END_URL + '/histogram', data => {
+    httpGet(BACK_END_URL + '/api/histogram', data => {
         loadImage(BACK_END_URL + data, img => {
             this.img = img;
             this.img_loaded = true;
