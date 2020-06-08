@@ -3,10 +3,8 @@ import cv2
 
 
 class Histogram:
-    img_dict = {}
-
-
     def __init__(self, image_datas):
+        self.img_dict = {}
         for img_data in image_datas:
             if img_data.date in self.img_dict:
                 self.img_dict[img_data.date].append(img_data.index)

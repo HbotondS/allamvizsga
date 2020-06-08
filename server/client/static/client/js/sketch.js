@@ -15,6 +15,8 @@ let posX = 0;
 let posY = 0;
 
 let img;
+const ImageType = {Grid: 0, Histogram: 1};
+let imgType;
 let img_loaded = false;
 let spinner;
 
@@ -57,6 +59,7 @@ function loadImages() {
     httpGet(BACK_END_URL + `/api/big?size=${size}`, data => {
         loadImage(BACK_END_URL + data, img => {
             this.img = img;
+            this.imgType = ImageType.Grid;
             this.img_loaded = true;
             setTimeout(() => splitImage(img), 0);
 
@@ -74,6 +77,7 @@ function randomImages() {
     httpGet(BACK_END_URL + '/api/random', data => {
         loadImage(BACK_END_URL + data, img => {
             this.img = img;
+            this.imgType = ImageType.Grid;
             this.img_loaded = true;
 
             const t1 = performance.now();
@@ -90,6 +94,7 @@ function reverseImages() {
     httpGet(BACK_END_URL + '/api/reverse', data => {
         loadImage(BACK_END_URL + data, img => {
             this.img = img;
+            this.imgType = ImageType.Grid;
             this.img_loaded = true;
 
             const t1 = performance.now();
@@ -106,6 +111,7 @@ function histogram() {
     httpGet(BACK_END_URL + '/api/histogram', data => {
         loadImage(BACK_END_URL + data, img => {
             this.img = img;
+            this.imgType = ImageType.Histogram;
             this.img_loaded = true;
 
             const t1 = performance.now();
@@ -184,7 +190,11 @@ function draw() {
         // camera(posX, posY, , posX, posY, 0, 0, 1, 0);
         imageMode(CENTER);
         if (this.img_loaded) {
-            image(this.img, posX, posY, zoom, zoom);
+            if (this.imgType === ImageType.Grid) {
+                image(this.img, posX, posY, zoom, zoom);
+            } else if (this.imgType === ImageType.Histogram) {
+                image(this.img, posX, posY, this.img.width, zoom)
+            }
         }
         this.spinner.draw();
     }
