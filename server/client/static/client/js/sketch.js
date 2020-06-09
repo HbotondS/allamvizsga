@@ -27,14 +27,17 @@ const BACK_END_URL = 'http://127.0.0.1:8000';
  * @param {p5.Image} rowImg - row from the big image 
  * @param {int} rowNr - row from the big image 
  * @param {int} length - of the row
+ * @param {JSON} json - contains the datas for the images
  */
-function splitRowImage(rowImg, rowNr, length) {
+function splitRowImage(rowImg, rowNr, length, json) {
     for (let i = 0; i < length; i++) {
         const img = rowImg.get(50*i, 0, 50, 50);
+        const jsonIndex = rowNr * length + i;
         imageDatas.push(new ImageData(
-            Math.floor((Math.random() * 10000)),
-            null,
+            json[jsonIndex]._id,
+            json[jsonIndex].date,
             img,
+            json[jsonIndex].image,
             {x: 50*i, y: 50*rowNr}
         ));
     }
@@ -42,13 +45,14 @@ function splitRowImage(rowImg, rowNr, length) {
 
 /**
  * @param {p5.Image} bigImg - the image we want to split 
+ * @param {JSON} json - contains the datas for the images
  */
-function splitImage(bigImg) {
+function splitImage(bigImg, json) {
     const numberOfRows = bigImg.width / 50;
     for (let i = 0; i < numberOfRows; i++) {
         // get a row from the big image
         const rowImg = bigImg.get(0, 50*i, bigImg.width, 50);
-        setTimeout(() => splitRowImage(rowImg, i, numberOfRows), 0);
+        setTimeout(() => splitRowImage(rowImg, i, numberOfRows, json), 0);
     }
 }
 
@@ -63,7 +67,12 @@ function loadImages() {
             this.imgType = ImageType.Grid;
             this.img_loaded = true;
             this.zoomHeight = canvasHeight;
-            setTimeout(() => splitImage(img), 0);
+            setTimeout(() => {
+                loadJSON(BACK_END_URL + `/images?size=${size}`, json => {
+                    print(json.length)
+                    splitImage(img, json);
+                });
+            }, 0);
 
             const t1 = performance.now();
             print(`Loading images images took: ${Number((t1 - t0) / 1000).toFixed(2)} seconds.`);
@@ -192,7 +201,8 @@ function mouseClicked() {
                 const imgY = imageData.pos.y * this.zoomHeight / this.img.width
                 if (mouseXinPic > imgX && mouseXinPic <= imgX + smallImgDim
                     && mouseYinPic > imgY && mouseYinPic <= imgY + smallImgDim) {
-                        imageData.image.save(imageData.id.toString(), 'jpg')
+                        // imageData.image.save(imageData.id.toString(), 'jpg')
+                        loadImage(BACK_END_URL + '/' + imageData.imgUrl, img => img.save(imageData.id.toString(), 'jpg'));
                     }
             });
         }

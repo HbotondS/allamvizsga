@@ -4,6 +4,7 @@
  * @param id is a unique identifier of the image 
  * @param date is the uploaddate of the image
  * @param img is the image
+ * @param imgUrl is a URL, where the full resolustion image is located
  * @param pos is a position (x, y), store the location
  *            of the image on the buffer 
  * 
@@ -11,7 +12,7 @@
  * @author Botond Hegyi
  */
 class ImageData {
-    constructor(id, date, img, pos){
+    constructor(id, date, img, imgUrl, pos){
         if (id === undefined && date == undefined && img && undefined) {
             this.id = "";
             this.date = new Date();
@@ -21,6 +22,7 @@ class ImageData {
             this.id = id;
             this.date = date;
             this.image = img;
+            this.imgUrl = imgUrl;
             this.pos = pos;
         }
     }

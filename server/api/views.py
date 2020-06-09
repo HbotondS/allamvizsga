@@ -124,6 +124,8 @@ class ImageViewSet(viewsets.ModelViewSet):
 
     def list(self, request, pk=None):
         queryset = ImageData.objects.all()
+        size = int(request.GET.get('size', len(queryset)))
+        queryset = queryset[:size]
         serializer = ImageSerializer(queryset, many=True)
         # todo: merge images into rows
         return Response(serializer.data)
