@@ -62,8 +62,10 @@ def histogram(request):
     # group images by date
     start = util.get_time()
     imglist = list(ImageData.objects.all())
+    size = int(request.GET.get('size', len(imglist)))
+    sort = request.GET.get('sort', '')
 
-    histogram = Histogram(imglist[:100])
+    histogram = Histogram(imglist[:size], sort)
     histogram.gen_img()    
 
     big_img_data = BigImageData.objects.last()

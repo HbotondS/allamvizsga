@@ -3,13 +3,23 @@ import cv2
 
 
 class Histogram:
-    def __init__(self, image_datas):
+    def __init__(self, image_datas, sort):
         self.img_dict = {}
         for img_data in image_datas:
             if img_data.date in self.img_dict:
-                self.img_dict[img_data.date].append(img_data.index)
+                if sort == '':
+                    self.img_dict[img_data.date].append(img_data.index)
+                elif sort == 'month':
+                    self.img_dict[img_data.date.month].append(img_data.index)
+                elif sort == 'day':
+                    self.img_dict[img_data.date.day].append(img_data.index)
             else:
-                self.img_dict[img_data.date] = [img_data.index]
+                if sort == '':
+                    self.img_dict[img_data.date] = [img_data.index]
+                elif sort == 'month':
+                    self.img_dict[img_data.date.month] = [img_data.index]
+                elif sort == 'day':
+                    self.img_dict[img_data.date.day] = [img_data.index]
 
 
     # return the length of the longest element from the dictionary
