@@ -10,7 +10,8 @@ let canvasHeight;
 let halfCanvasWidth;
 let halfCanvasHeight;
 
-let zoom = 500;
+let zoomHeight = 500;
+let zoomWidth;
 let posX = 0;
 let posY = 0;
 
@@ -61,7 +62,7 @@ function loadImages() {
             this.img = img;
             this.imgType = ImageType.Grid;
             this.img_loaded = true;
-            zoom = canvasHeight;
+            this.zoomHeight = canvasHeight;
             setTimeout(() => splitImage(img), 0);
 
             const t1 = performance.now();
@@ -80,7 +81,7 @@ function randomImages() {
             this.img = img;
             this.imgType = ImageType.Grid;
             this.img_loaded = true;
-            zoom = canvasHeight;
+            this.zoomHeight = canvasHeight;
 
             const t1 = performance.now();
             print(`Random order images took: ${Number((t1 - t0) / 1000).toFixed(2)} seconds.`);
@@ -98,7 +99,7 @@ function reverseImages() {
             this.img = img;
             this.imgType = ImageType.Grid;
             this.img_loaded = true;
-            zoom = canvasHeight;
+            this.zoomHeight = canvasHeight;
 
             const t1 = performance.now();
             print(`Reverse order images took: ${Number((t1 - t0) / 1000).toFixed(2)} seconds.`);
@@ -116,6 +117,8 @@ function histogram() {
             this.img = img;
             this.imgType = ImageType.Histogram;
             this.img_loaded = true;
+            this.zoomHeight = img.height;
+            this.zoomWidth = img.width;
 
             const t1 = performance.now();
             print(`Histogram images took: ${Number((t1 - t0) / 1000).toFixed(2)} seconds.`);
@@ -137,10 +140,20 @@ function setup() {
 function mouseWheel(event) {
     const zoomSpeed = 20;
     if (event.delta < 0) {
-        zoom += zoomSpeed;
+        if (this.imgType === ImageType.Histogram) {            
+            this.zoomWidth += this.zoomWidth * 0.05;
+            this.zoomHeight += this.zoomHeight * 0.05
+        } else {
+            this.zoomHeight += zoomSpeed;
+        }
     }
     if (event.delta > 0) {
-        zoom -= zoomSpeed;
+        if (this.imgType === ImageType.Histogram) {
+            this.zoomWidth -= this.zoomWidth * 0.05;
+            this.zoomHeight -= this.zoomHeight * 0.05
+        } else {
+            this.zoomHeight -= zoomSpeed;
+        }
     }
 }
 
@@ -167,16 +180,16 @@ function mouseClicked() {
         return;
     }
     if (this.img_loaded) {
-        const halfZoom = zoom / 2;
+        const halfZoom = this.zoomHeight / 2;
         if ((mouseX - halfCanvasWidth) < halfZoom + posX && (mouseX - halfCanvasWidth) > -halfZoom + posX
             && (mouseY - halfCanvasHeight) < halfZoom + posY && (mouseY - halfCanvasHeight) > -halfZoom + posY) {
             const mouseXinPic = mouseX - halfCanvasWidth - posX + halfZoom
             const mouseYinPic = mouseY - halfCanvasHeight - posY + halfZoom
             // print(mouseXinPic, mouseYinPic)
-            const smallImgDim = 50 * zoom / this.img.width
+            const smallImgDim = 50 * this.zoomHeight / this.img.width
             imageDatas.forEach(imageData => {
-                const imgX = imageData.pos.x * zoom / this.img.width
-                const imgY = imageData.pos.y * zoom / this.img.width
+                const imgX = imageData.pos.x * this.zoomHeight / this.img.width
+                const imgY = imageData.pos.y * this.zoomHeight / this.img.width
                 if (mouseXinPic > imgX && mouseXinPic <= imgX + smallImgDim
                     && mouseYinPic > imgY && mouseYinPic <= imgY + smallImgDim) {
                         imageData.image.save(imageData.id.toString(), 'jpg')
@@ -194,9 +207,9 @@ function draw() {
         imageMode(CENTER);
         if (this.img_loaded) {
             if (this.imgType === ImageType.Grid) {
-                image(this.img, posX, posY, zoom, zoom);
+                image(this.img, posX, posY, this.zoomHeight, this.zoomHeight);
             } else if (this.imgType === ImageType.Histogram) {
-                image(this.img, posX, posY, this.img.width, zoom)
+                image(this.img, posX, posY, this.zoomWidth, this.zoomHeight)
             }
         }
         this.spinner.draw();
