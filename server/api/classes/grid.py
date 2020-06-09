@@ -9,7 +9,7 @@ class Grid:
     def __init__(self, image_datas):
         self.image_datas = image_datas
 
-    def __multithread_imggen(self, big_img, index, row_length, imglist_len):
+    def __multithread_imggen(self, big_img, row_index, index, row_length, imglist_len):
         images = []
         for i in range(1, row_length):
             if index < imglist_len:
@@ -18,7 +18,7 @@ class Grid:
             else:
                 break
 
-        big_img.append(cv2.hconcat(images))
+        big_img[row_index] = (cv2.hconcat(images))
 
 
     def gen_img(self):
@@ -27,12 +27,12 @@ class Grid:
         # to display the images in a square
         row_len = ceil(sqrt(imglist_len))
 
-        big_img = []
+        big_img = {}
         index = 0
         # creating thread 
         threads = []
         for i in range(row_len-1):
-            threads.append(threading.Thread(target=self.__multithread_imggen, args=(big_img, i*row_len, row_len, imglist_len)))
+            threads.append(threading.Thread(target=self.__multithread_imggen, args=(big_img, i, i*row_len, row_len, imglist_len)))
 
         for i in range(row_len-1):
             threads[i].start()
@@ -41,11 +41,16 @@ class Grid:
             # waiting the threads to finish
             threads[i].join()
 
-        self.__multithread_imggen(big_img, (row_len-1) * row_len, row_len, imglist_len)
+        self.__multithread_imggen(big_img, row_len-1, (row_len-1) * row_len, row_len, imglist_len)
 
         blank = util.blank_image(shape=[50, big_img[0].shape[1] - big_img[row_len-1].shape[1], 3])
         big_img[row_len-1] = cv2.hconcat([big_img[row_len-1], blank])
-        output = cv2.vconcat(big_img)
+
+        big = []
+        for item in sorted(big_img.items()):
+            big.append(item[1])
+
+        output = cv2.vconcat(big)
         cv2.imwrite('media/big.jpg', output)
 
 
