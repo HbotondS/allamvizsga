@@ -61,6 +61,7 @@ function loadImages() {
             this.img = img;
             this.imgType = ImageType.Grid;
             this.img_loaded = true;
+            zoom = canvasHeight;
             setTimeout(() => splitImage(img), 0);
 
             const t1 = performance.now();
@@ -79,6 +80,7 @@ function randomImages() {
             this.img = img;
             this.imgType = ImageType.Grid;
             this.img_loaded = true;
+            zoom = canvasHeight;
 
             const t1 = performance.now();
             print(`Random order images took: ${Number((t1 - t0) / 1000).toFixed(2)} seconds.`);
@@ -96,6 +98,7 @@ function reverseImages() {
             this.img = img;
             this.imgType = ImageType.Grid;
             this.img_loaded = true;
+            zoom = canvasHeight;
 
             const t1 = performance.now();
             print(`Reverse order images took: ${Number((t1 - t0) / 1000).toFixed(2)} seconds.`);
