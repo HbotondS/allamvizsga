@@ -16,6 +16,7 @@ let posX = 0;
 let posY = 0;
 
 let img;
+let imgWidth;
 const ImageType = {Grid: 0, Histogram: 1};
 let imgType;
 let img_loaded = false;
@@ -128,6 +129,7 @@ function histogram() {
             this.img_loaded = true;
             this.zoomHeight = img.height * canvasWidth/img.width;
             this.zoomWidth = canvasWidth;
+            this.imgWidth = img.width;
 
             const t1 = performance.now();
             print(`Histogram images took: ${Number((t1 - t0) / 1000).toFixed(2)} seconds.`);
@@ -166,6 +168,14 @@ function mouseWheel(event) {
     }
 }
 
+function zoomOnRow(rowNr) {
+        print(canvasHeight)
+        this.zoomWidth *= (canvasHeight / 2) / this.zoomHeight;
+        this.zoomHeight = canvasHeight / 2;
+        posX = +this.zoomWidth * 50 / this.imgWidth * (Math.round(77/2) + rowNr);
+        posY = 0;
+}
+
 function keyDown() {
     if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) {
         posX -= 50;
@@ -189,22 +199,29 @@ function mouseClicked() {
         return;
     }
     if (this.img_loaded) {
-        const halfZoom = this.zoomHeight / 2;
-        if ((mouseX - halfCanvasWidth) < halfZoom + posX && (mouseX - halfCanvasWidth) > -halfZoom + posX
-            && (mouseY - halfCanvasHeight) < halfZoom + posY && (mouseY - halfCanvasHeight) > -halfZoom + posY) {
-            const mouseXinPic = mouseX - halfCanvasWidth - posX + halfZoom
-            const mouseYinPic = mouseY - halfCanvasHeight - posY + halfZoom
+        const halfZoomHeight = this.zoomHeight / 2;
+        const halfZoomWidth = this.zoomWidth / 2;
+        if ((mouseX - halfCanvasWidth) < halfZoomWidth + posX && (mouseX - halfCanvasWidth) > -halfZoomWidth + posX
+            && (mouseY - halfCanvasHeight) < halfZoomHeight + posY && (mouseY - halfCanvasHeight) > -halfZoomHeight + posY) {
+            const mouseXinPic = mouseX - halfCanvasWidth - posX + halfZoomWidth
+            const mouseYinPic = mouseY - halfCanvasHeight - posY + halfZoomHeight
             // print(mouseXinPic, mouseYinPic)
-            const smallImgDim = 50 * this.zoomHeight / this.img.width
-            imageDatas.forEach(imageData => {
-                const imgX = imageData.pos.x * this.zoomHeight / this.img.width
-                const imgY = imageData.pos.y * this.zoomHeight / this.img.width
-                if (mouseXinPic > imgX && mouseXinPic <= imgX + smallImgDim
-                    && mouseYinPic > imgY && mouseYinPic <= imgY + smallImgDim) {
-                        // imageData.image.save(imageData.id.toString(), 'jpg')
-                        loadImage(BACK_END_URL + '/' + imageData.imgUrl, img => img.save(imageData.id.toString(), 'jpg'));
-                    }
-            });
+            const smallImgDim = 50 * this.zoomWidth / this.imgWidth;
+            if (this.imgType === ImageType.Grid) {
+                imageDatas.forEach(imageData => {
+                    const imgX = imageData.pos.x * this.zoomHeight / this.img.width
+                    const imgY = imageData.pos.y * this.zoomHeight / this.img.width
+                    if (mouseXinPic > imgX && mouseXinPic <= imgX + smallImgDim
+                        && mouseYinPic > imgY && mouseYinPic <= imgY + smallImgDim) {
+                            // imageData.image.save(imageData.id.toString(), 'jpg')
+                            loadImage(BACK_END_URL + '/' + imageData.imgUrl, img => img.save(imageData.id.toString(), 'jpg'));
+                        }
+                });
+            } else if (this.imgType === ImageType.Histogram) {
+                const row = Math.floor(mouseXinPic / smallImgDim);
+                print('row: ' + row);
+                zoomOnRow(row);
+            }
         }
     }
 }
