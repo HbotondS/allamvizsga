@@ -126,8 +126,8 @@ function histogram() {
             this.img = img;
             this.imgType = ImageType.Histogram;
             this.img_loaded = true;
-            this.zoomHeight = img.height;
-            this.zoomWidth = img.width;
+            this.zoomHeight = img.height * canvasWidth/img.width;
+            this.zoomWidth = canvasWidth;
 
             const t1 = performance.now();
             print(`Histogram images took: ${Number((t1 - t0) / 1000).toFixed(2)} seconds.`);
