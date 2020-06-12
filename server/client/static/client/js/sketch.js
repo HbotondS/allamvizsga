@@ -198,18 +198,18 @@ function mouseWheel(event) {
 /**
  * zoom on the given column on the histogram
  * 
- * @param {int} columnNr - on which column to zoom on
- * @param {int} imgNr - number of columns in histogram
+ * @param {int} column - on which column to zoom on
+ * @param {int} columnCount - number of columns in histogram
  */
-function zoomOnRow(columnNr, imgNr) {
+function zoomOnColumn(column, columnCount) {
         this.zoomWidth *= (canvasHeight / 2) / this.zoomHeight;
         this.zoomHeight = canvasHeight / 2;
         const smallImgDim = 50 * this.zoomWidth / this.imgWidth;
-        const middleRow = Math.round(imgNr/2);
-        if (columnNr < imgNr / 2) {
-            posX = +smallImgDim * (middleRow - columnNr - 1);
+        const middleRow = Math.round(columnCount/2);
+        if (column < middleRow) {
+            posX = +smallImgDim * (middleRow - column - 1);
         } else {
-            posX = -smallImgDim * (middleRow - (-columnNr + imgNr - 1));
+            posX = -smallImgDim * (middleRow - (-column + imgNr - 1));
         }
         posY = 0;
 }
@@ -269,7 +269,7 @@ function mouseClicked() {
                 const column = Math.floor(mouseXinPic / smallImgDim);
                 const imgNr = this.zoomWidth / smallImgDim;
                 print(`column: ${column}, number of image in a row ${imgNr}`);
-                zoomOnRow(column, imgNr);
+                zoomOnColumn(column, imgNr);
             }
         }
     }
