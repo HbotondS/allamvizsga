@@ -168,11 +168,15 @@ function mouseWheel(event) {
     }
 }
 
-function zoomOnRow(rowNr) {
-        print(canvasHeight)
+function zoomOnRow(columnNr, imgNr) {
+        // print(canvasHeight)
         this.zoomWidth *= (canvasHeight / 2) / this.zoomHeight;
         this.zoomHeight = canvasHeight / 2;
-        posX = +this.zoomWidth * 50 / this.imgWidth * (Math.round(77/2) + rowNr);
+        if (columnNr < imgNr / 2) {
+            posX = +this.zoomWidth * 50 / this.imgWidth * (Math.round(imgNr/2) + columnNr);
+        } else {
+            posX = -this.zoomWidth * 50 / this.imgWidth * (Math.round(imgNr/2) + columnNr);
+        }
         posY = 0;
 }
 
@@ -218,9 +222,10 @@ function mouseClicked() {
                         }
                 });
             } else if (this.imgType === ImageType.Histogram) {
-                const row = Math.floor(mouseXinPic / smallImgDim);
-                print('row: ' + row);
-                zoomOnRow(row);
+                const column = Math.floor(mouseXinPic / smallImgDim);
+                const imgNr = this.zoomWidth / smallImgDim;
+                print(`column: ${column}, number of image in a row ${imgNr}`);
+                zoomOnRow(column, imgNr);
             }
         }
     }
