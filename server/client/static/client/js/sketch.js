@@ -25,6 +25,8 @@ let spinner;
 const BACK_END_URL = 'http://127.0.0.1:8000';
 
 /**
+ * split a row to small index images and pair them with the data
+ * 
  * @param {p5.Image} rowImg - row from the big image 
  * @param {int} rowNr - row from the big image 
  * @param {int} length - of the row
@@ -45,6 +47,8 @@ function splitRowImage(rowImg, rowNr, length, json) {
 }
 
 /**
+ * split the big image to smaller ones on a background thread
+ * 
  * @param {p5.Image} bigImg - the image we want to split 
  * @param {JSON} json - contains the datas for the images
  */
@@ -57,7 +61,10 @@ function splitImage(bigImg, json) {
     }
 }
 
-// load the images from the back-end
+/**
+ * load the images from the back-end
+ * and load the image datas stored in a json
+ */
 function loadImages() {
     const t0 = performance.now();
     this.spinner.showSpinner();
@@ -82,7 +89,9 @@ function loadImages() {
     })
 }
 
-// randomize the images
+/**
+ * randomize the images
+ */
 function randomImages() {
     const t0 = performance.now();
     this.spinner.showSpinner();
@@ -100,7 +109,9 @@ function randomImages() {
     })
 }
 
-// sort the images in reverse order on the server
+/**
+ * sort the images in reverse order on the server
+ */
 function reverseImages() { 
     const t0 = performance.now();
     this.spinner.showSpinner();
@@ -118,7 +129,9 @@ function reverseImages() {
     })
 }
 
-// diplay the images on a histogram, grouped by dates
+/**
+ * diplay the images on a histogram, grouped by dates
+ */
 function histogram() {
     const t0 = performance.now();
     this.spinner.showSpinner();
@@ -138,6 +151,12 @@ function histogram() {
     })
 }
 
+/**
+ * BUILT IN FUNCTION IN P5JS
+ * 
+ * called once when the program starts
+ * used to initialize variables
+ */
 function setup() {
     canvasWidth = windowWidth * 80 / 100;
     canvasHeight = windowHeight - 50;
@@ -148,6 +167,14 @@ function setup() {
     this.spinner = new SpinnerService()
 }
 
+/**
+ * BUILT IN FUNCTION IN P5JS
+ * 
+ * called every time when a vertical mouse wheel event is detected
+ * 
+ * the event.delta property returns the amount the mouse wheel have scrolled
+ * The values can be positive or negative depending on the scroll direction
+ */
 function mouseWheel(event) {
     const zoomSpeed = 20;
     if (event.delta < 0) {
@@ -168,6 +195,12 @@ function mouseWheel(event) {
     }
 }
 
+/**
+ * zoom on the given column on the histogram
+ * 
+ * @param {int} columnNr - on which column to zoom on
+ * @param {int} imgNr - number of columns in histogram
+ */
 function zoomOnRow(columnNr, imgNr) {
         this.zoomWidth *= (canvasHeight / 2) / this.zoomHeight;
         this.zoomHeight = canvasHeight / 2;
@@ -181,6 +214,11 @@ function zoomOnRow(columnNr, imgNr) {
         posY = 0;
 }
 
+/**
+ * used for the navivation
+ * currently there is two way for that:
+ *    arrow keys or WASD
+ */
 function keyDown() {
     if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) {
         posX -= 50;
@@ -199,6 +237,11 @@ function keyDown() {
     }
 }
 
+/**
+ * BUILT IN FUNCTION IN P5JS
+ * 
+ * called once after a mouse button has been pressed and then released.
+ */
 function mouseClicked() {
     if (mouseX > width || mouseY > height || mouseX < 0 || mouseY < 0) {
         return;
@@ -232,6 +275,13 @@ function mouseClicked() {
     }
 }
 
+/**
+ * BUILT IN FUNCTION IN P5JS
+ * 
+ * Called directly after setup()
+ * continuously executes the code contained inside its block 
+ * until the program is stopped
+ */
 function draw() {
     if (focused) {
         background(0);
