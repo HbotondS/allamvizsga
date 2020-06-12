@@ -169,13 +169,14 @@ function mouseWheel(event) {
 }
 
 function zoomOnRow(columnNr, imgNr) {
-        // print(canvasHeight)
         this.zoomWidth *= (canvasHeight / 2) / this.zoomHeight;
         this.zoomHeight = canvasHeight / 2;
+        const smallImgDim = 50 * this.zoomWidth / this.imgWidth;
+        const middleRow = Math.round(imgNr/2);
         if (columnNr < imgNr / 2) {
-            posX = +this.zoomWidth * 50 / this.imgWidth * (Math.round(imgNr/2) + columnNr);
+            posX = +smallImgDim * (middleRow - columnNr - 1);
         } else {
-            posX = -this.zoomWidth * 50 / this.imgWidth * (Math.round(imgNr/2) + columnNr);
+            posX = -smallImgDim * (middleRow - (-columnNr + imgNr - 1));
         }
         posY = 0;
 }
