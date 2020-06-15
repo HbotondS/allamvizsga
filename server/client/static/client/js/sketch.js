@@ -76,6 +76,8 @@ function loadImages() {
             this.imgType = ImageType.Grid;
             this.img_loaded = true;
             this.zoomHeight = canvasHeight;
+            this.zoomWidth = this.zoomHeight;
+            this.imgWidth = img.width;
             setTimeout(() => {
                 loadJSON(BACK_END_URL + `/images?size=${size}`, json => {
                     print(json.length)
@@ -102,6 +104,8 @@ function randomImages() {
             this.imgType = ImageType.Grid;
             this.img_loaded = true;
             this.zoomHeight = canvasHeight;
+            this.zoomWidth = this.zoomHeight;
+            this.imgWidth = img.width;
 
             const t1 = performance.now();
             print(`Random order images took: ${Number((t1 - t0) / 1000).toFixed(2)} seconds.`);
@@ -122,6 +126,8 @@ function reverseImages() {
             this.imgType = ImageType.Grid;
             this.img_loaded = true;
             this.zoomHeight = canvasHeight;
+            this.zoomWidth = this.zoomHeight;
+            this.imgWidth = img.width;
 
             const t1 = performance.now();
             print(`Reverse order images took: ${Number((t1 - t0) / 1000).toFixed(2)} seconds.`);
@@ -239,6 +245,17 @@ function keyDown() {
 }
 
 /**
+ * check if the mouse was clicked inside the image
+ */
+function mouseClickedInImage(halfZoomHeight, halfZoomWidth) {
+    const myMouseX = mouseX - halfCanvasWidth;
+    const myMouseY = mouseY - halfCanvasHeight;
+    const width = halfZoomWidth + posX;
+    const height = halfZoomHeight + posY;
+    return myMouseX < width && myMouseX > -width && myMouseY < height && myMouseY > -height;
+}
+
+/**
  * BUILT IN FUNCTION IN P5JS
  * 
  * called once after a mouse button has been pressed and then released.
@@ -250,16 +267,15 @@ function mouseClicked() {
     if (this.img_loaded) {
         const halfZoomHeight = this.zoomHeight / 2;
         const halfZoomWidth = this.zoomWidth / 2;
-        if ((mouseX - halfCanvasWidth) < halfZoomWidth + posX && (mouseX - halfCanvasWidth) > -halfZoomWidth + posX
-            && (mouseY - halfCanvasHeight) < halfZoomHeight + posY && (mouseY - halfCanvasHeight) > -halfZoomHeight + posY) {
-            const mouseXinPic = mouseX - halfCanvasWidth - posX + halfZoomWidth
-            const mouseYinPic = mouseY - halfCanvasHeight - posY + halfZoomHeight
+        if (mouseClickedInImage(halfCanvasHeight, halfCanvasWidth)) {
+            const mouseXinPic = mouseX - halfCanvasWidth - posX + halfZoomWidth;
+            const mouseYinPic = mouseY - halfCanvasHeight - posY + halfZoomHeight;
             // print(mouseXinPic, mouseYinPic)
             const smallImgDim = 50 * this.zoomWidth / this.imgWidth;
             if (this.imgType === ImageType.Grid) {
                 imageDatas.forEach(imageData => {
-                    const imgX = imageData.pos.x * this.zoomHeight / this.img.width
-                    const imgY = imageData.pos.y * this.zoomHeight / this.img.width
+                    const imgX = imageData.pos.x * this.zoomHeight / this.img.width;
+                    const imgY = imageData.pos.y * this.zoomHeight / this.img.width;
                     if (mouseXinPic > imgX && mouseXinPic <= imgX + smallImgDim
                         && mouseYinPic > imgY && mouseYinPic <= imgY + smallImgDim) {
                             // imageData.image.save(imageData.id.toString(), 'jpg')
