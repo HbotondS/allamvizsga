@@ -18,6 +18,7 @@ let posY = 0;
 let img;
 let imgWidth;
 const ImageType = {Grid: 0, Histogram: 1};
+const ImageSelectionMode = {Single: 'single', Column: 'column'};
 let imgType;
 let img_loaded = false;
 let spinner;
@@ -266,10 +267,15 @@ function mouseClicked() {
                         }
                 });
             } else if (this.imgType === ImageType.Histogram) {
-                const column = Math.floor(mouseXinPic / smallImgDim);
-                const imgNr = this.zoomWidth / smallImgDim;
-                print(`column: ${column}, number of image in a row ${imgNr}`);
-                zoomOnColumn(column, imgNr);
+                const selectionMode = document.getElementById('imageSelectionMode').value;
+                if (selectionMode === ImageSelectionMode.Column) {
+                    const column = Math.floor(mouseXinPic / smallImgDim);
+                    const imgNr = this.zoomWidth / smallImgDim;
+                    print(`column: ${column}, number of image in a row ${imgNr}`);
+                    zoomOnColumn(column, imgNr);
+                } else if (selectionMode === ImageSelectionMode.Single) {
+                    // todo: download image
+                }
             }
         }
     }
