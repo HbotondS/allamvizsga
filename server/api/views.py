@@ -57,6 +57,10 @@ def randomImages(request):
     return grid_response(start)
 
 
+def grid_data(request):
+    log.info('grid data')
+    return grid.get_data()
+
 def histogram(request):
     log.info('histogram')
     # group images by date
@@ -125,11 +129,3 @@ class ImageViewSet(viewsets.ModelViewSet):
     def delete(self, request):
         ImageData.objects.all().delete()
         return HttpResponse(content='Images deleted', status=200)
-
-    def list(self, request, pk=None):
-        queryset = ImageData.objects.all()
-        size = int(request.GET.get('size', len(queryset)))
-        queryset = queryset[:size]
-        serializer = ImageSerializer(queryset, many=True)
-        # todo: merge images into rows
-        return Response(serializer.data)

@@ -1,3 +1,5 @@
+from django.http import HttpResponse
+from django.core import serializers
 from math import ceil, sqrt
 from random import shuffle
 from ..utils import util
@@ -62,3 +64,8 @@ class Grid:
         print(self.image_datas[0])
         shuffle(self.image_datas)
         print(self.image_datas[0])
+
+
+    def get_data(self):
+        data = serializers.serialize('json', self.image_datas)
+        return HttpResponse(data, content_type='application/json')

@@ -38,11 +38,12 @@ function splitRowImage(rowImg, rowNr, length, json) {
         const img = rowImg.get(50*i, 0, 50, 50);
         const jsonIndex = rowNr * length + i;
         imageDatas.push(new ImageData(
-            json[jsonIndex]._id,
-            json[jsonIndex].date,
+            json[jsonIndex].fields._id,
+            json[jsonIndex].fields.date,
             img,
-            json[jsonIndex].image,
-            {x: 50*i, y: 50*rowNr}
+            json[jsonIndex].fields.image,
+            {x: i, y: rowNr},
+            json[jsonIndex].fields.tweet_text
         ));
     }
 }
@@ -55,6 +56,7 @@ function splitRowImage(rowImg, rowNr, length, json) {
  */
 function splitImage(bigImg, json) {
     const numberOfRows = bigImg.width / 50;
+    print(numberOfRows)
     for (let i = 0; i < numberOfRows; i++) {
         // get a row from the big image
         const rowImg = bigImg.get(0, 50*i, bigImg.width, 50);
@@ -79,7 +81,7 @@ function loadImages() {
             this.zoomWidth = this.zoomHeight;
             this.imgWidth = img.width;
             setTimeout(() => {
-                loadJSON(BACK_END_URL + `/images?size=${size}`, json => {
+                loadJSON(BACK_END_URL + `/api/grid_data`, json => {
                     print(json.length)
                     splitImage(img, json);
                 });
@@ -273,14 +275,17 @@ function mouseClicked() {
             // print(mouseXinPic, mouseYinPic)
             const smallImgDim = 50 * this.zoomWidth / this.imgWidth;
             if (this.imgType === ImageType.Grid) {
+                const column = Math.floor(mouseXinPic / smallImgDim);
+                const row = Math.floor(mouseYinPic / smallImgDim)
+                print(column, row)
                 imageDatas.forEach(imageData => {
                     const imgX = imageData.pos.x * this.zoomHeight / this.img.width;
                     const imgY = imageData.pos.y * this.zoomHeight / this.img.width;
-                    if (mouseXinPic > imgX && mouseXinPic <= imgX + smallImgDim
-                        && mouseYinPic > imgY && mouseYinPic <= imgY + smallImgDim) {
-                            // imageData.image.save(imageData.id.toString(), 'jpg')
-                            loadImage(BACK_END_URL + '/' + imageData.imgUrl, img => img.save(imageData.id.toString(), 'jpg'));
-                        }
+                    if (column === imageData.pos.x && row === imageData.pos.y) {
+                        // imageData.image.save(imageData.id.toString(), 'jpg')
+                        print(imageData.id);
+                        loadImage(BACK_END_URL + '/' + imageData.imgUrl, img => img.save(imageData.id.toString(), 'jpg'));
+                    }
                 });
             } else if (this.imgType === ImageType.Histogram) {
                 const selectionMode = document.getElementById('imageSelectionMode').value;
