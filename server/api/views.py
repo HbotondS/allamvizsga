@@ -35,6 +35,11 @@ def big(request):
     size = int(request.GET.get('size', len(image_datas)))
     image_datas = image_datas[:size]
 
+    text = request.GET.get('text', '')
+    if text != '':
+        image_datas = [image_data for image_data in image_datas if text in image_data.tweet_text]
+
+    print(len(image_datas))
     grid.image_datas = image_datas
     grid.gen_img()
 
