@@ -17,6 +17,7 @@ class ImageData(models.Model):
     date = models.DateTimeField(null=False)
     image = models.CharField(max_length=256, null=False, default='')
     index = models.CharField(max_length=256, null=False, default='')
+    tweet_text = models.CharField(max_length=280, default='')
 
 
 class BigImageData(models.Model):

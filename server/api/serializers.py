@@ -5,7 +5,7 @@ from .models import ImageData, BigImageData
 class ImageSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ImageData
-        fields = ['_id', 'date', 'image', 'index']
+        fields = ['_id', 'date', 'image', 'index', 'tweet_text']
 
 
 class BigImageSerializer(serializers.HyperlinkedModelSerializer):

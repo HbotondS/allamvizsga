@@ -93,6 +93,7 @@ def load_images(request):
         img_data.index = 'media/images/index/' + filename
         try:
             img_data.date = util.convert_timestamp2date(data[img_id]['timestamp_ms'])
+            img_data.tweet_text = data[img_id]['text']
 
             img_data.save()
         except Exception as e:
@@ -116,7 +117,8 @@ class ImageViewSet(viewsets.ModelViewSet):
         image = request.data['image']
         index = request.data['index']
         date = request.data['date']
-        ImageData.objects.create(name=name, image=image, date=date, index=index)
+        tweet_text = request.data['tweet_text']
+        ImageData.objects.create(name=name, image=image, date=date, index=index, tweet_text=tweet_text)
         # merge_images(imageData, request.data['image'])
         return HttpRequest({'message': 'Image created'}, status=200)
 
