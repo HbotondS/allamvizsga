@@ -36,7 +36,7 @@ const BACK_END_URL = 'http://127.0.0.1:8000';
 function splitRowImage(rowImg, rowNr, length, json) {
     for (let i = 0; i < length; i++) {
         const img = rowImg.get(50*i, 0, 50, 50);
-        const jsonIndex = rowNr * length + i;
+        const jsonIndex = rowNr * length + i + rowNr;
         imageDatas.push(new ImageData(
             json[jsonIndex].fields._id,
             json[jsonIndex].fields.date,
@@ -56,7 +56,7 @@ function splitRowImage(rowImg, rowNr, length, json) {
  */
 function splitImage(bigImg, json) {
     const numberOfRows = bigImg.width / 50;
-    print(numberOfRows)
+    // print(numberOfRows)
     for (let i = 0; i < numberOfRows; i++) {
         // get a row from the big image
         const rowImg = bigImg.get(0, 50*i, bigImg.width, 50);
@@ -82,7 +82,7 @@ function loadImagesByKeyword() {
             this.imgWidth = img.width;
             setTimeout(() => {
                 loadJSON(BACK_END_URL + `/api/grid_data`, json => {
-                    print(json.length)
+                    // print(json.length)
                     splitImage(img, json);
                 });
             }, 0);
@@ -112,7 +112,7 @@ function loadImages() {
             this.imgWidth = img.width;
             setTimeout(() => {
                 loadJSON(BACK_END_URL + `/api/grid_data`, json => {
-                    print(json.length)
+                    // print(json.length)
                     splitImage(img, json);
                 });
             }, 0);
@@ -309,11 +309,9 @@ function mouseClicked() {
                 const row = Math.floor(mouseYinPic / smallImgDim)
                 print(column, row)
                 imageDatas.forEach(imageData => {
-                    const imgX = imageData.pos.x * this.zoomHeight / this.img.width;
-                    const imgY = imageData.pos.y * this.zoomHeight / this.img.width;
                     if (column === imageData.pos.x && row === imageData.pos.y) {
                         // imageData.image.save(imageData.id.toString(), 'jpg')
-                        print(imageData.id);
+                        // print(imageData.id);
                         loadImage(BACK_END_URL + '/' + imageData.imgUrl, img => img.save(imageData.id.toString(), 'jpg'));
                     }
                 });
