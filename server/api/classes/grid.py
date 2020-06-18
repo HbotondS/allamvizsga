@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.core import serializers
-from math import ceil, sqrt
+from math import sqrt
 from random import shuffle
 from ..utils import util
 import threading
@@ -27,7 +27,7 @@ class Grid:
         imglist_len = len(self.image_datas)
         # calculate how many image can fit in a row
         # to display the images in a square
-        row_len = ceil(sqrt(imglist_len))
+        row_len = util.round(sqrt(imglist_len))
 
         big_img = {}
         index = 0

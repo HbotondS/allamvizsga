@@ -1,5 +1,6 @@
 from django.utils.timezone import make_aware
 from datetime import datetime
+from math import floor, ceil
 import time
 import json
 import timeit
@@ -33,3 +34,11 @@ def process_json(file_name):
         data[str(line_data['id_str'])] = line_data
 
     return data
+
+
+def round(number):
+    temp = floor(number)
+    if number - temp < 0.5:
+        return temp
+    else:
+        return ceil(number)
