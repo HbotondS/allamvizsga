@@ -5,12 +5,11 @@ from .models import ImageData, BigImageData
 from .serializers import ImageSerializer, BigImageSerializer
 from .utils import logging as log
 from .utils import util
-from .classes.histogram import Histogram
-from .classes.grid import Grid
+from .classes.image_collection import Image_Collection
 from os import listdir
 
 
-grid = Grid([])
+image_collection = Image_Collection([])
 
 
 def index(request):
@@ -40,8 +39,8 @@ def big(request):
         image_datas = [image_data for image_data in image_datas if text in image_data.tweet_text]
 
     print(len(image_datas))
-    grid.image_datas = image_datas
-    grid.gen_img()
+    image_collection.image_datas = image_datas
+    image_collection.grid()
 
     return grid_response(start)
 
@@ -49,22 +48,22 @@ def big(request):
 def reverseImages(request):
     log.info('reverse images')
     start = util.get_time()
-    grid.reverse()
-    grid.gen_img()
+    image_collection.reverse()
+    image_collection.grid()
     return grid_response(start)
 
 
 def randomImages(request):
     log.info('random images') 
     start = util.get_time()
-    grid.shuffle()
-    grid.gen_img()
+    image_collection.shuffle()
+    image_collection.gen_img()
     return grid_response(start)
 
 
 def grid_data(request):
     log.info('grid data')
-    return grid.get_data()
+    return image_collection.get_data()
 
 def histogram(request):
     log.info('histogram')
@@ -74,8 +73,8 @@ def histogram(request):
     size = int(request.GET.get('size', len(imglist)))
     sort = request.GET.get('sort', '')
 
-    histogram = Histogram(imglist[:size], sort)
-    histogram.gen_img()    
+    # histogram = Histogram(imglist[:100], sort)
+    image_collection.histogram(sort)    
 
     big_img_data = BigImageData.objects.last()
     # -------

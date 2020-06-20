@@ -7,7 +7,7 @@ import threading
 import cv2
 
 
-class Grid:
+class Image_Collection:
     def __init__(self, image_datas):
         self.image_datas = image_datas
 
@@ -23,7 +23,7 @@ class Grid:
         big_img[row_index] = (cv2.hconcat(images))
 
 
-    def gen_img(self):
+    def grid(self):
         imglist_len = len(self.image_datas)
         # calculate how many image can fit in a row
         # to display the images in a square
@@ -69,3 +69,51 @@ class Grid:
     def get_data(self):
         data = serializers.serialize('json', self.image_datas)
         return HttpResponse(data, content_type='application/json')
+
+
+    def gen_dict(self, sort):
+        img_dict = {}
+        for img_data in self.image_datas:
+            if img_data.date in img_dict:
+                if sort == '':
+                    img_dict[img_data.date].append(img_data.index)
+                elif sort == 'month':
+                    img_dict[img_data.date.month].append(img_data.index)
+                elif sort == 'day':
+                    img_dict[img_data.date.day].append(img_data.index)
+            else:
+                if sort == '':
+                    img_dict[img_data.date] = [img_data.index]
+                elif sort == 'month':
+                    img_dict[img_data.date.month] = [img_data.index]
+                elif sort == 'day':
+                    img_dict[img_data.date.day] = [img_data.index]
+
+        return img_dict
+
+
+    # return the length of the longest element from the dictionary
+    def __GetMaxFlow(self, hist_dict):        
+        pos = max(hist_dict, key=lambda k: len(hist_dict[k]))
+        return len(hist_dict[pos])
+
+    
+    def histogram(self, sort):
+        hist_dict = self.gen_dict(sort)
+
+        height = self.__GetMaxFlow(hist_dict)
+        big_img = []
+        x_offset = 0
+        for i in hist_dict:
+            y_offset = 0
+            column_img = util.blank_image(shape=[height * 50, 50, 3])
+            for img_path in hist_dict[i]:
+                img = cv2.imread(img_path)
+                column_img[column_img.shape[0]-(y_offset+1)*img.shape[0] : column_img.shape[0] - y_offset * img.shape[0],
+                            0:column_img.shape[1]] = img
+                y_offset += 1
+
+            big_img.append(column_img)
+
+        output = cv2.hconcat(big_img)
+        cv2.imwrite('media/hist.jpg', output)
