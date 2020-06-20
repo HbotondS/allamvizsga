@@ -65,6 +65,15 @@ function splitImage(bigImg, json) {
 }
 
 /**
+ * activte other buttons after the image is loaded
+ */
+function activateButtons() {
+    document.getElementById('rndBtn').disabled = false;
+    document.getElementById('revBtn').disabled = false;
+    document.getElementById('histBtn').disabled = false;
+}
+
+/**
  * load the images from the back-end by keyword
  * and load the image datas stored in a json
  */
@@ -86,6 +95,7 @@ function loadImagesByKeyword() {
                     splitImage(img, json);
                 });
             }, 0);
+            activateButtons();
 
             const t1 = performance.now();
             print(`Loading images images took: ${Number((t1 - t0) / 1000).toFixed(2)} seconds.`);
@@ -116,6 +126,7 @@ function loadImages() {
                     splitImage(img, json);
                 });
             }, 0);
+            activateButtons();
 
             const t1 = performance.now();
             print(`Loading images images took: ${Number((t1 - t0) / 1000).toFixed(2)} seconds.`);
@@ -188,6 +199,17 @@ function histogram() {
             this.spinner.hideSpinner();
         })
     })
+}
+
+/**
+ * BUILT IN FUNCTION IN P5JS
+ * 
+ * called once before setup()
+ */
+function preload() {
+    document.getElementById('rndBtn').disabled = true;
+    document.getElementById('revBtn').disabled = true;
+    document.getElementById('histBtn').disabled = true;
 }
 
 /**
