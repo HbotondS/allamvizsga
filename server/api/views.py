@@ -57,7 +57,7 @@ def randomImages(request):
     log.info('random images') 
     start = util.get_time()
     image_collection.shuffle()
-    image_collection.gen_img()
+    image_collection.grid()
     return grid_response(start)
 
 
