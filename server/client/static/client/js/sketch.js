@@ -310,6 +310,17 @@ function mouseClickedInImage(halfZoomHeight, halfZoomWidth) {
 }
 
 /**
+ * display the selected image's data in a container
+ * @param {ImageData} imgData 
+ */
+function dispalyImageData(imgData) {
+    document.getElementById('imgData').style.display = 'block';
+    print(imgData.tweet)
+    document.getElementById('tweetTxt').textContent = imgData.tweet;
+    document.getElementById('tweetDate').textContent = imgData.date;
+}
+
+/**
  * BUILT IN FUNCTION IN P5JS
  * 
  * called once after a mouse button has been pressed and then released.
@@ -328,13 +339,14 @@ function mouseClicked() {
             const smallImgDim = 50 * this.zoomWidth / this.imgWidth;
             if (this.imgType === ImageType.Grid) {
                 const column = Math.floor(mouseXinPic / smallImgDim);
-                const row = Math.floor(mouseYinPic / smallImgDim)
-                print(column, row)
+                const row = Math.floor(mouseYinPic / smallImgDim);
+                print(column, row);
                 imageDatas.forEach(imageData => {
                     if (column === imageData.pos.x && row === imageData.pos.y) {
                         // imageData.image.save(imageData.id.toString(), 'jpg')
                         // print(imageData.id);
-                        loadImage(BACK_END_URL + '/' + imageData.imgUrl, img => img.save(imageData.id.toString(), 'jpg'));
+                        // loadImage(BACK_END_URL + '/' + imageData.imgUrl, img => img.save(imageData.id.toString(), 'jpg'));
+                        dispalyImageData(imageData);
                     }
                 });
             } else if (this.imgType === ImageType.Histogram) {
@@ -345,7 +357,9 @@ function mouseClicked() {
                     print(`column: ${column}, number of image in a row ${imgNr}`);
                     zoomOnColumn(column, imgNr);
                 } else if (selectionMode === ImageSelectionMode.Single) {
-                    // todo: download image
+                    const column = Math.floor(mouseXinPic / smallImgDim);
+                    const row = Math.floor(mouseYinPic / smallImgDim);
+                    print(column, row);
                 }
             }
         }
