@@ -196,6 +196,8 @@ function histogram() {
             setTimeout(() => {
                 loadJSON(BACK_END_URL + `/api/hist_data`, json => {
                     print(json)
+                    keys = Object.keys(json);
+                    document.getElementById('date').textContent = keys[0] + ' & ' + keys[keys.length - 1];
                     // splitHistogram(img, json);
                 });
             }, 0);
