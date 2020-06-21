@@ -54,7 +54,7 @@ function splitRowImage(rowImg, rowNr, length, json) {
  * @param {p5.Image} bigImg - the image we want to split 
  * @param {JSON} json - contains the datas for the images
  */
-function splitImage(bigImg, json) {
+function splitGrid(bigImg, json) {
     const numberOfRows = bigImg.width / 50;
     // print(numberOfRows)
     for (let i = 0; i < numberOfRows; i++) {
@@ -92,7 +92,7 @@ function loadImagesByKeyword() {
             setTimeout(() => {
                 loadJSON(BACK_END_URL + `/api/grid_data`, json => {
                     // print(json.length)
-                    splitImage(img, json);
+                    splitGrid(img, json);
                 });
             }, 0);
             activateButtons();
@@ -123,7 +123,7 @@ function loadImages() {
             setTimeout(() => {
                 loadJSON(BACK_END_URL + `/api/grid_data`, json => {
                     // print(json.length)
-                    splitImage(img, json);
+                    splitGrid(img, json);
                 });
             }, 0);
             activateButtons();
@@ -193,6 +193,12 @@ function histogram() {
             this.zoomHeight = img.height * canvasWidth/img.width;
             this.zoomWidth = canvasWidth;
             this.imgWidth = img.width;
+            setTimeout(() => {
+                loadJSON(BACK_END_URL + `/api/hist_data`, json => {
+                    print(json)
+                    // splitHistogram(img, json);
+                });
+            }, 0);
 
             const t1 = performance.now();
             print(`Histogram images took: ${Number((t1 - t0) / 1000).toFixed(2)} seconds.`);
@@ -276,7 +282,7 @@ function zoomOnColumn(column, columnCount) {
         if (column < middleRow) {
             posX = +smallImgDim * (middleRow - column - 1);
         } else {
-            posX = -smallImgDim * (middleRow - (-column + imgNr - 1));
+            posX = -smallImgDim * (middleRow - (-column + columnCount - 1));
         }
         posY = 0;
 }

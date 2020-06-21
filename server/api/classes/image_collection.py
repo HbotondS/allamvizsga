@@ -4,6 +4,7 @@ from math import sqrt
 from random import shuffle
 from ..utils import util
 import threading
+import json
 import cv2
 
 
@@ -66,28 +67,50 @@ class Image_Collection:
         print(self.image_datas[0])
 
 
-    def get_data(self):
+    def get_grid_data(self):
         data = serializers.serialize('json', self.image_datas)
         return HttpResponse(data, content_type='application/json')
 
 
+    def get_hist_data(self):
+        data = json.dumps(self.hist_datas)
+        return HttpResponse(data, content_type='application/json')
+
+
+    def data2dict(self, img_data):
+        img_data_dict = {}
+        img_data_dict['id'] = img_data._id
+        img_data_dict['tweet'] = img_data.tweet_text
+        img_data_dict['index'] = img_data.index
+        img_data_dict['image'] = img_data.image
+
+        return img_data_dict
+
+
     def gen_dict(self, sort):
         img_dict = {}
+        self.hist_datas = {}
         for img_data in self.image_datas:
             if img_data.date in img_dict:
                 if sort == '':
                     img_dict[img_data.date].append(img_data.index)
+                    self.hist_datas[str(img_data.date)].append(self.data2dict(img_data))
                 elif sort == 'month':
                     img_dict[img_data.date.month].append(img_data.index)
+                    self.hist_datas[str(img_data.date.month)].append(img_data)
                 elif sort == 'day':
                     img_dict[img_data.date.day].append(img_data.index)
+                    self.hist_datas[str(img_data.date.day)].append(img_data)
             else:
                 if sort == '':
                     img_dict[img_data.date] = [img_data.index]
+                    self.hist_datas[str(img_data.date)] = [self.data2dict(img_data)]
                 elif sort == 'month':
                     img_dict[img_data.date.month] = [img_data.index]
+                    self.hist_datas[str(img_data.date.month)] = [img_data]
                 elif sort == 'day':
                     img_dict[img_data.date.day] = [img_data.index]
+                    self.hist_datas[str(img_data.date.day)] = [img_data]
 
         return img_dict
 

@@ -9,5 +9,6 @@ urlpatterns = [
     path('random/', views.randomImages),
     path('reverse/', views.reverseImages),
     path('grid_data/', views.grid_data),
+    path('hist_data/', views.hist_data),
     path('histogram/', views.histogram),
 ]

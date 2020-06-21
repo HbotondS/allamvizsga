@@ -63,7 +63,13 @@ def randomImages(request):
 
 def grid_data(request):
     log.info('grid data')
-    return image_collection.get_data()
+    return image_collection.get_grid_data()
+
+
+def hist_data(request):
+    log.info('histogram data')
+    return image_collection.get_hist_data()
+
 
 def histogram(request):
     log.info('histogram')
