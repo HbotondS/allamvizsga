@@ -210,6 +210,12 @@ function preload() {
     document.getElementById('rndBtn').disabled = true;
     document.getElementById('revBtn').disabled = true;
     document.getElementById('histBtn').disabled = true;
+
+    document.getElementById('tweet').addEventListener('keyup', e => {
+        if (e.keyCode === 13) {
+            loadImagesByKeyword();
+        }
+    })
 }
 
 /**
