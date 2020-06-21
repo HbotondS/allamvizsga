@@ -28,8 +28,8 @@ const BACK_END_URL = 'http://127.0.0.1:8000';
 /**
  * split a row to small index images and pair them with the data
  * 
- * @param {p5.Image} rowImg - row from the big image 
- * @param {int} rowNr - row from the big image 
+ * @param {p5.Image} rowImg - row from the big image
+ * @param {int} rowNr - row from the big image
  * @param {int} length - of the row
  * @param {JSON} json - contains the datas for the images
  */
@@ -49,18 +49,60 @@ function splitRowImage(rowImg, rowNr, length, json) {
 }
 
 /**
- * split the big image to smaller ones on a background thread
+ * split the grid image to smaller ones on a background thread
  * 
- * @param {p5.Image} bigImg - the image we want to split 
+ * @param {p5.Image} bigImg - the image we want to split
  * @param {JSON} json - contains the datas for the images
  */
 function splitGrid(bigImg, json) {
-    const numberOfRows = bigImg.width / 50;
+    imageDatas = []
+
+    const numberOfRows = bigImg.height / 50;
     // print(numberOfRows)
     for (let i = 0; i < numberOfRows; i++) {
         // get a row from the big image
         const rowImg = bigImg.get(0, 50*i, bigImg.width, 50);
         setTimeout(() => splitRowImage(rowImg, i, numberOfRows, json), 0);
+    }
+}
+
+/**
+ * split a column to small index images and pair them with the data
+ * 
+ * @param {p5.Image} columnImg - column from the histogram
+ * @param {Array} columnData - contains the datas for the column
+ * @param {int} numberOfRows - how many rows build up the image
+ * @param {int} columnNr - which column from the histogran
+ */
+function splitColumnImage(columnImg, columnData, numberOfRows, columnNr) {
+    for (let i = 0; i < columnData.length; i++) {
+        const img = columnImg.get(0, columnImg.height - 50 * i - 50, 50, 50);
+        imageDatas.push(new ImageData(
+            columnData[i].id,
+            columnData[i].date,
+            img,
+            columnData[i].image,
+            {x: columnNr, y: numberOfRows - i - 1},
+            columnData[i].tweet
+        ));
+    }
+}
+
+/**
+ * split the histogram image to small images on a background thread
+ * 
+ * @param {p5.Image} histImg - the histogram we want to split 
+ * @param {JSON} json - contains the datas for the images
+ */
+function splitHistogram(histImg, json) {
+    imageDatas = []
+
+    const numberOfColumns = histImg.width / 50;
+    const numberOfRows = histImg.height / 50;
+    for (let i = 0; i < numberOfColumns; i++) {
+        // get a column from the histogram
+        const column = histImg.get(50*i, 0, 50, histImg.height);
+        setTimeout(() => splitColumnImage(column, json[Object.keys(json)[i]], numberOfRows, i), 0);
     }
 }
 
@@ -195,10 +237,10 @@ function histogram() {
             this.imgWidth = img.width;
             setTimeout(() => {
                 loadJSON(BACK_END_URL + `/api/hist_data`, json => {
-                    print(json)
+                    // print(json)
                     keys = Object.keys(json);
                     document.getElementById('date').textContent = keys[0] + ' & ' + keys[keys.length - 1];
-                    // splitHistogram(img, json);
+                    splitHistogram(img, json);
                 });
             }, 0);
 
@@ -329,7 +371,6 @@ function mouseClickedInImage(halfZoomHeight, halfZoomWidth) {
  */
 function dispalyImageData(imgData) {
     document.getElementById('imgData').style.display = 'block';
-    print(imgData.tweet)
     document.getElementById('tweetTxt').textContent = imgData.tweet;
     document.getElementById('tweetDate').textContent = imgData.date;
 }
@@ -374,6 +415,11 @@ function mouseClicked() {
                     const column = Math.floor(mouseXinPic / smallImgDim);
                     const row = Math.floor(mouseYinPic / smallImgDim);
                     print(column, row);
+                    imageDatas.forEach(imageData => {
+                        if (column === imageData.pos.x && row === imageData.pos.y) {
+                            dispalyImageData(imageData);
+                        }
+                    });
                 }
             }
         }
