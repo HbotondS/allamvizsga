@@ -1,0 +1,14 @@
+.main-container {
+    float: right; 
+    width: 10%; 
+    margin-right: 3em;
+}
+
+#loadByTweetBtn {
+    margin-top: 0.2em;
+}
+
+#tweetImgMini {
+    width: 100px;
+    height: 100px;
+}

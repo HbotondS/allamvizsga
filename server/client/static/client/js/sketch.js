@@ -300,6 +300,9 @@ function setup() {
  * The values can be positive or negative depending on the scroll direction
  */
 function mouseWheel(event) {
+    if (mouseX > width || mouseY > height || mouseX < 0 || mouseY < 0) {
+        return;
+    }
     const zoomSpeed = 20;
     if (event.delta < 0) {
         if (this.imgType === ImageType.Histogram) {            
@@ -380,6 +383,8 @@ function dispalyImageData(imgData) {
     document.getElementById('imgData').style.display = 'block';
     document.getElementById('tweetTxt').textContent = imgData.tweet;
     document.getElementById('tweetDate').textContent = imgData.date;
+    document.getElementById('tweetImg').href = imgData.imgUrl;
+    document.getElementById('tweetImgMini').src = imgData.imgUrl;
 }
 
 /**

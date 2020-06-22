@@ -12,42 +12,49 @@
     <script src="{% static 'client/js/SpinnerService.js' %}"></script>
     <script src="{% static 'client/js/ImageData.js' %}"></script>
     <script src="{% static 'client/js/util.js' %}"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css"  href="{% static 'client/scss/styles.css' %}" media="screen"/>
 </head>
 <body>
-    <div style="float: right; width: 10%; ">
-        <div>
-            <label for="size">Number of images:</label>
+    <div class="main-container">
+        <div class="form-group">
+            <label for="sizes">Number of images:</label>
 
-            <select name="size" id="sizes">
+            <select id="sizes" class="form-control">
                 <option value="1000">1k</option>
                 <option value="10000">10k</option>
                 <option value="20000">20k</option>
                 <option value="40000">40k</option>
             </select>
         </div>
-        <div>
+        <div class="form-group">
             <label for="imageSelectionMode">Selection mode:</label>
 
-            <select name="selection-mode" id="imageSelectionMode">
+            <select id="imageSelectionMode" class="form-control">
                 <option value="single">Single</option>
                 <option value="column">Column</option>
             </select>
         </div>
-        <button id="loadBtn" onclick="loadImages()">Load</button>
-        <button id="rndBtn" onclick="randomImages()">Random</button>
-        <button id="revBtn" onclick="reverseImages()">Reverse</button>
+        <div class="btn-group">
+            <button id="rndBtn" class="btn btn-primary" onclick="randomImages()">Random</button>
+            <button id="revBtn" class="btn btn-primary" onclick="reverseImages()">Reverse</button>
+        </div>
         <div>
             <hr/>
-            <button id="histBtn" onclick="histogram()">Histogram</button>
+            <button id="histBtn" class="btn btn-primary" onclick="histogram()">Histogram</button>
+            <br/>
             <b>Histogram between:</b>
             <p id="date"></p>
         </div>
         <div>
             <hr/>
-            <label for="tweet">Get images by tweet:</label>
-
-            <input type="text" id="tweet"/>
-            <button id="loadByTweetBtn" onclick="loadImagesByKeyword()">Load</button>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Get images by tweet:</span>
+                </div>
+                <input  id="tweet" type="text"class="form-control"/>
+            </div>
+            <button id="loadByTweetBtn" class="btn btn-primary" onclick="loadImagesByKeyword()">Load</button>
             <p id="collectionSize"></p>
         </div>
         <div id="imgData" style="display: none;">
@@ -58,7 +65,7 @@
             Date:
             <label id="tweetDate"></label>
             Image:
-            <img id="tweetImg"/>
+            <a id="tweetImg" href="" target="blank"><img id="tweetImgMini"/></a>
         </div>
     </div>
 </body>
