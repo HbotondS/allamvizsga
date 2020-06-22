@@ -16,6 +16,10 @@ def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
 
+def data_count(request):
+    return HttpResponse(ImageData.objects.count())
+
+
 def grid_response(start):
     big_img_data = BigImageData.objects.first()
     # -------

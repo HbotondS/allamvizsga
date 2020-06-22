@@ -5,6 +5,9 @@
 
 let imageDatas = [];
 
+// store the size of the image collection
+let collectionSize;
+
 let canvasWidth;
 let canvasHeight;
 let halfCanvasWidth;
@@ -133,7 +136,7 @@ function loadImagesByKeyword() {
             this.imgWidth = img.width;
             setTimeout(() => {
                 loadJSON(BACK_END_URL + `/api/grid_data`, json => {
-                    // print(json.length)
+                    document.getElementById('collectionSize').textContent = `${json.length}/${this.collectionSize}`;
                     splitGrid(img, json);
                 });
             }, 0);
@@ -265,6 +268,10 @@ function preload() {
         if (e.keyCode === 13) {
             loadImagesByKeyword();
         }
+    })
+
+    httpGet(BACK_END_URL + '/api/data_count', count => {
+        this.collectionSize = count;
     })
 }
 

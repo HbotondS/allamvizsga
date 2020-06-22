@@ -11,4 +11,5 @@ urlpatterns = [
     path('grid_data/', views.grid_data),
     path('hist_data/', views.hist_data),
     path('histogram/', views.histogram),
+    path('data_count/', views.data_count)
 ]
