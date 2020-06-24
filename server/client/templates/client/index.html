@@ -36,23 +36,6 @@
         </div>
         <div>
             <hr/>
-            <button id="histBtn" class="btn btn-primary" onclick="histogram()">Histogram</button>
-            <div class="form-group" style="margin-top: 1em;">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">Selection mode:</span>
-                    </div>
-                    <select id="imageSelectionMode" class="form-control">
-                        <option value="single">Single</option>
-                        <option value="column">Column</option>
-                    </select>
-                </div>
-            </div>
-            <b>Histogram between:</b>
-            <p id="date"></p>
-        </div>
-        <div>
-            <hr/>
             <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text">Get images by keyword:</span>
@@ -61,6 +44,26 @@
             </div>
             <button id="loadByTweetBtn" class="btn btn-primary" onclick="loadImagesByKeyword()">Load</button>
             <p id="collectionSize"></p>
+        </div>
+        <div id="histogram" style="display: none;">
+            <hr/>
+            <button id="histBtn" class="btn btn-primary" onclick="histogram()">Histogram</button>
+            <div id="histogramOptions" style="display: none;">
+                <div class="form-group" style="margin-top: 1em;">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Selection mode:</span>
+                        </div>
+                        <select id="imageSelectionMode" class="form-control">
+                            <option value="single">Single</option>
+                            <option value="column">Column</option>
+                        </select>
+                    </div>
+                </div>
+                <b>Histogram between:</b>
+                <p id="date1"></p>
+                <p id="date2"></p>
+            </div>
         </div>
         <div id="imgData" style="display: none;">
             <hr/>

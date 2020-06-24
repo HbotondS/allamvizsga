@@ -138,6 +138,7 @@ function loadImagesByKeyword() {
             setTimeout(() => {
                 loadJSON(BACK_END_URL + `/api/grid_data`, json => {
                     document.getElementById('collectionSize').textContent = `${json.length}/${this.collectionSize}`;
+                    document.getElementById('histogram').style.display = 'block';
                     splitGrid(img, json);
                 });
             }, 0);
@@ -212,7 +213,9 @@ function histogram() {
                 loadJSON(BACK_END_URL + `/api/hist_data`, json => {
                     // print(json)
                     keys = Object.keys(json);
-                    document.getElementById('date').textContent = keys[0] + ' & ' + keys[keys.length - 1];
+                    document.getElementById('histogramOptions').style.display = 'block';
+                    document.getElementById('date1').textContent = keys[0];
+                    document.getElementById('date2').textContent = keys[keys.length - 1];
                     splitHistogram(img, json);
                 });
             }, 0);
