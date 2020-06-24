@@ -39,7 +39,7 @@ const BACK_END_URL = 'http://127.0.0.1:8000';
 function splitRowImage(rowImg, rowNr, length, json) {
     for (let i = 0; i < length; i++) {
         const img = rowImg.get(50*i, 0, 50, 50);
-        const jsonIndex = rowNr * length + i + rowNr;
+        const jsonIndex = rowNr * length + i;
         imageDatas.push(new ImageData(
             json[jsonIndex].fields._id,
             json[jsonIndex].fields.date,

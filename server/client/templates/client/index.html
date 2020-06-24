@@ -13,27 +13,22 @@
     <script src="{% static 'client/js/ImageData.js' %}"></script>
     <script src="{% static 'client/js/util.js' %}"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css"  href="{% static 'client/scss/styles.css' %}" media="screen"/>
+    <link rel="stylesheet" type="text/css"  href="{% static 'client/css/styles.css' %}" media="screen"/>
 </head>
 <body>
     <div class="main-container">
         <div class="form-group">
-            <label for="sizes">Number of images:</label>
-
-            <select id="sizes" class="form-control">
-                <option value="1000">1k</option>
-                <option value="10000">10k</option>
-                <option value="20000">20k</option>
-                <option value="40000">40k</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="imageSelectionMode">Selection mode:</label>
-
-            <select id="imageSelectionMode" class="form-control">
-                <option value="single">Single</option>
-                <option value="column">Column</option>
-            </select>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Select collection:</span>
+                </div>
+                <select id="sizes" class="form-control">
+                    <option value="1000">1k</option>
+                    <option value="10000">10k</option>
+                    <option value="20000">20k</option>
+                    <option value="40000">40k</option>
+                </select>
+            </div>
         </div>
         <div class="btn-group">
             <button id="rndBtn" class="btn btn-primary" onclick="randomImages()">Random</button>
@@ -42,7 +37,17 @@
         <div>
             <hr/>
             <button id="histBtn" class="btn btn-primary" onclick="histogram()">Histogram</button>
-            <br/>
+            <div class="form-group" style="margin-top: 1em;">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Selection mode:</span>
+                    </div>
+                    <select id="imageSelectionMode" class="form-control">
+                        <option value="single">Single</option>
+                        <option value="column">Column</option>
+                    </select>
+                </div>
+            </div>
             <b>Histogram between:</b>
             <p id="date"></p>
         </div>
@@ -50,7 +55,7 @@
             <hr/>
             <div class="input-group">
                 <div class="input-group-prepend">
-                    <span class="input-group-text">Get images by tweet:</span>
+                    <span class="input-group-text">Get images by keyword:</span>
                 </div>
                 <input  id="tweet" type="text"class="form-control"/>
             </div>
@@ -60,11 +65,13 @@
         <div id="imgData" style="display: none;">
             <hr/>
             <b>Selected image's data:</b>
-            Tweet:
+            <br>
+            <label for="tweetTxt">Text:</label>
             <p id="tweetTxt"></p>
-            Date:
+            <label for="tweetDate">Date:</label>
             <label id="tweetDate"></label>
-            Image:
+            <br>
+            <label for="tweetImg">Image:</label>
             <a id="tweetImg" href="" target="blank"><img id="tweetImgMini"/></a>
         </div>
     </div>
