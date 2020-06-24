@@ -126,7 +126,8 @@ function loadImagesByKeyword() {
     const t0 = performance.now();
     this.spinner.showSpinner();
     const text = document.getElementById('tweet').value;
-    httpGet(BACK_END_URL + `/api/big?text=${text}`, data => {
+    const size = document.getElementById('sizes').value;
+    httpGet(BACK_END_URL + `/api/big?text=${text}&size=${size}`, data => {
         loadImage(BACK_END_URL + data, img => {
             this.img = img;
             this.imgType = ImageType.Grid;
@@ -137,37 +138,6 @@ function loadImagesByKeyword() {
             setTimeout(() => {
                 loadJSON(BACK_END_URL + `/api/grid_data`, json => {
                     document.getElementById('collectionSize').textContent = `${json.length}/${this.collectionSize}`;
-                    splitGrid(img, json);
-                });
-            }, 0);
-            activateButtons();
-
-            const t1 = performance.now();
-            print(`Loading images images took: ${Number((t1 - t0) / 1000).toFixed(2)} seconds.`);
-            this.spinner.hideSpinner();
-        })
-    })
-}
-
-/**
- * load the images from the back-end
- * and load the image datas stored in a json
- */
-function loadImages() {
-    const t0 = performance.now();
-    this.spinner.showSpinner();
-    const size = document.getElementById('sizes').value;
-    httpGet(BACK_END_URL + `/api/big?size=${size}`, data => {
-        loadImage(BACK_END_URL + data, img => {
-            this.img = img;
-            this.imgType = ImageType.Grid;
-            this.img_loaded = true;
-            this.zoomHeight = canvasHeight;
-            this.zoomWidth = this.zoomHeight;
-            this.imgWidth = img.width;
-            setTimeout(() => {
-                loadJSON(BACK_END_URL + `/api/grid_data`, json => {
-                    // print(json.length)
                     splitGrid(img, json);
                 });
             }, 0);
