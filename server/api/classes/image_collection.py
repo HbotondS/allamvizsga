@@ -12,8 +12,9 @@ class Image_Collection:
     def __init__(self, image_datas):
         self.image_datas = image_datas
 
-    def __multithread_imggen(self, big_img, row_index, index, row_length, imglist_len):
+    def __multithread_imggen(self, big_img, row_index, index, row_length):
         images = []
+        imglist_len = len(self.image_datas)
         for i in range(1, row_length):
             if index < imglist_len:
                 images.append(cv2.imread(self.image_datas[index].index))
@@ -35,7 +36,7 @@ class Image_Collection:
         # creating thread 
         threads = []
         for i in range(row_len-1):
-            threads.append(threading.Thread(target=self.__multithread_imggen, args=(big_img, i, i*row_len, row_len, imglist_len)))
+            threads.append(threading.Thread(target=self.__multithread_imggen, args=(big_img, i, i*row_len, row_len)))
 
         for i in range(row_len-1):
             threads[i].start()
@@ -44,7 +45,7 @@ class Image_Collection:
             # waiting the threads to finish
             threads[i].join()
 
-        self.__multithread_imggen(big_img, row_len-1, (row_len-1) * row_len, row_len, imglist_len)
+        self.__multithread_imggen(big_img, row_len-1, (row_len-1) * row_len, row_len)
 
         blank = util.blank_image(shape=[50, big_img[0].shape[1] - big_img[row_len-1].shape[1], 3])
         big_img[row_len-1] = cv2.hconcat([big_img[row_len-1], blank])
@@ -72,7 +73,7 @@ class Image_Collection:
         return HttpResponse(data, content_type='application/json')
 
 
-    def get_hist_data(self):
+    def get_histogram_data(self):
         data = json.dumps(self.hist_datas)
         return HttpResponse(data, content_type='application/json')
 
@@ -116,7 +117,7 @@ class Image_Collection:
 
 
     # return the length of the longest element from the dictionary
-    def __GetMaxFlow(self, hist_dict):        
+    def __get_max_flow(self, hist_dict):        
         pos = max(hist_dict, key=lambda k: len(hist_dict[k]))
         return len(hist_dict[pos])
 
@@ -124,7 +125,7 @@ class Image_Collection:
     def histogram(self, sort):
         hist_dict = self.gen_dict(sort)
 
-        height = self.__GetMaxFlow(hist_dict)
+        height = self.__get_max_flow(hist_dict)
         big_img = []
         x_offset = 0
         for i in hist_dict:

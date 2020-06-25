@@ -72,7 +72,7 @@ def grid_data(request):
 
 def hist_data(request):
     log.info('histogram data')
-    return image_collection.get_hist_data()
+    return image_collection.get_histogram_data()
 
 
 def histogram(request):
