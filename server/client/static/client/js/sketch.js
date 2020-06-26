@@ -256,7 +256,7 @@ function preload() {
  */
 function setup() {
     canvasWidth = windowWidth * 80 / 100;
-    canvasHeight = windowHeight - 50;
+    canvasHeight = windowHeight * 95 / 100;
     halfCanvasWidth = canvasWidth / 2;
     halfCanvasHeight = canvasHeight / 2;
     createCanvas(canvasWidth, canvasHeight, WEBGL);
