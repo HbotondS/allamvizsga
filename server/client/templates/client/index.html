@@ -47,6 +47,19 @@
         </div>
         <div id="histogram" style="display: none;">
             <hr/>
+            <div class="form-group">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Histogram mode:</span>
+                    </div>
+                    <select id="hist-mode" class="form-control">
+                        <option value="month">month</option>
+                        <option value="day">day</option>
+                        <option value="hour">hour</option>
+                        <option value="minute">minute</option>
+                    </select>
+                </div>
+            </div>
             <button id="histBtn" class="btn btn-primary" onclick="histogram()">Histogram</button>
             <div id="histogramOptions" style="display: none;">
                 <div class="form-group" style="margin-top: 1em;">

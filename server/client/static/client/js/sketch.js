@@ -201,7 +201,8 @@ function reverseImages() {
 function histogram() {
     const t0 = performance.now();
     this.spinner.showSpinner();
-    httpGet(BACK_END_URL + '/api/histogram', data => {
+    const histogramMode = document.getElementById('hist-mode').value;
+    httpGet(BACK_END_URL + `/api/histogram?sort=${histogramMode}`, data => {
         loadImage(BACK_END_URL + data, img => {
             this.img = img;
             this.imgType = ImageType.Histogram;

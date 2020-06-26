@@ -91,27 +91,46 @@ class Image_Collection:
     def gen_dict(self, sort):
         img_dict = {}
         self.hist_datas = {}
-        for img_data in self.image_datas:
-            if img_data.date in img_dict:
-                if sort == '':
+        if sort == '':
+            for img_data in self.image_datas:
+                if img_data.date in img_dict:
                     img_dict[img_data.date].append(img_data.index)
                     self.hist_datas[str(img_data.date)].append(self.data2dict(img_data))
-                elif sort == 'month':
-                    img_dict[img_data.date.month].append(img_data.index)
-                    self.hist_datas[str(img_data.date.month)].append(img_data)
-                elif sort == 'day':
-                    img_dict[img_data.date.day].append(img_data.index)
-                    self.hist_datas[str(img_data.date.day)].append(img_data)
-            else:
-                if sort == '':
+                else:
                     img_dict[img_data.date] = [img_data.index]
                     self.hist_datas[str(img_data.date)] = [self.data2dict(img_data)]
-                elif sort == 'month':
+        elif sort == 'month':
+            for img_data in self.image_datas:
+                if img_data.date.month in img_dict:
+                    img_dict[img_data.date.month].append(img_data.index)
+                    self.hist_datas[str(img_data.date.month)].append(self.data2dict(img_data))
+                else:
                     img_dict[img_data.date.month] = [img_data.index]
-                    self.hist_datas[str(img_data.date.month)] = [img_data]
-                elif sort == 'day':
+                    self.hist_datas[str(img_data.date.month)] = [self.data2dict(img_data)]
+        elif sort == 'day':
+            for img_data in self.image_datas:
+                if img_data.date.day in img_dict:
+                    img_dict[img_data.date.day].append(img_data.index)
+                    self.hist_datas[str(img_data.date.day)].append(self.data2dict(img_data))
+                else:
                     img_dict[img_data.date.day] = [img_data.index]
-                    self.hist_datas[str(img_data.date.day)] = [img_data]
+                    self.hist_datas[str(img_data.date.day)] = [self.data2dict(img_data)]
+        elif sort == 'hour':
+            for img_data in self.image_datas:
+                if img_data.date.hour in img_dict:
+                    img_dict[img_data.date.hour].append(img_data.index)
+                    self.hist_datas[str(img_data.date.hour)].append(self.data2dict(img_data))
+                else:
+                    img_dict[img_data.date.hour] = [img_data.index]
+                    self.hist_datas[str(img_data.date.hour)] = [self.data2dict(img_data)]
+        elif sort == 'minute':
+            for img_data in self.image_datas:
+                if img_data.date.minute in img_dict:
+                    img_dict[img_data.date.minute].append(img_data.index)
+                    self.hist_datas[str(img_data.date.minute)].append(self.data2dict(img_data))
+                else:
+                    img_dict[img_data.date.minute] = [img_data.index]
+                    self.hist_datas[str(img_data.date.minute)] = [self.data2dict(img_data)]
 
         return img_dict
 
