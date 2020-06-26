@@ -20,14 +20,15 @@ def multithread_imggen(row, index, row_length):
             images.append(cv2.imread(folder + file_list[index]))
             index += 1
         else:
-            break
+            # print('break')
+            return
 
     row.append(cv2.hconcat(images))
 
 
 if __name__ == "__main__": 
     start = timeit.default_timer()
-    folder = 'images/twitter-small/1k/'
+    folder = 'images/twitter-2016/'
     file_list = os.listdir(folder)
     imglist_len = len(file_list)
     row_length = ceil(sqrt(imglist_len))
@@ -45,14 +46,14 @@ if __name__ == "__main__":
     for i in range(row_length-1):
         threads[i].join()
 
-    multithread_imggen(row, (row_length-1) * row_length, row_length)
+    # multithread_imggen(row, (row_length-1) * row_length, row_length)
 
-    blank = np.zeros(shape=[50, row[0].shape[1] - row[len(row)-1].shape[1], 3], dtype=np.uint8)
-    row[len(row)-1] = cv2.hconcat([row[len(row)-1], blank])
+    # blank = np.zeros(shape=[50, row[0].shape[1] - row[len(row)-1].shape[1], 3], dtype=np.uint8)
+    # row[len(row)-1] = cv2.hconcat([row[len(row)-1], blank])
     output = cv2.vconcat(row)
     cv2.imwrite('BIG.jpg', output)
 
     print('done')
 
     stop = timeit.default_timer()
-    print('Time: ', stop - start)
+    print('Load time: {0:.3}s'.format(stop - start))
