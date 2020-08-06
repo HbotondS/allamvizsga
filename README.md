@@ -1,3 +1,7 @@
+![](https://img.shields.io/github/v/tag/HbotondS/allamvizsga)
+![](https://img.shields.io/github/release-date-pre/HbotondS/allamvizsga) <br>
+![](https://img.shields.io/github/issues-closed-raw/HbotondS/allamvizsga)
+
 # Nagy képkollekciók online megjelenitése
 
 The README is also available in english [here](README_EN.md).
